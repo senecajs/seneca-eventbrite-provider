@@ -7,7 +7,7 @@ Handle incoming messages within other frameworks.
 [![npm version](https://img.shields.io/npm/v/@seneca/eventbrite-provider.svg)](https://npmjs.com/package/@seneca/eventbrite-provider)
 [![build](https://github.com/senecajs/seneca-eventbrite-provider/actions/workflows/build.yml/badge.svg)](https://github.com/senecajs/seneca-eventbrite-provider/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/senecajs/seneca-eventbrite-provider/badge.svg?branch=main)](https://coveralls.io/github/senecajs/seneca-eventbrite-provider?branch=main)
-[![Known Vulnerabilities](https://snyk.io/test/github/senecajs/eventbrite-provider/badge.svg)](https://snyk.io/test/github/senecajs/eventbrite-provider)
+[![Known Vulnerabilities](https://snyk.io/test/github/senecajs/seneca-eventbrite-provider/badge.svg)](https://snyk.io/test/github/senecajs/seneca-eventbrite-provider)
 [![DeepScan grade](https://deepscan.io/api/teams/5016/projects/19458/branches/505693/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=5016&pid=19458&bid=505693)
 [![Maintainability](https://api.codeclimate.com/v1/badges/562abed571a4f6412c3a/maintainability)](https://codeclimate.com/github/senecajs/seneca-eventbrite-provider/maintainability)
 
