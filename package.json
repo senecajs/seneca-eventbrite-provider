@@ -1,6 +1,6 @@
 {
   "name": "@seneca/eventbrite-provider",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/eventbrite-provider.js",
   "type": "commonjs",
   "types": "dist/eventbrite-provider.d.ts",
