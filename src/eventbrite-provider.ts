@@ -1,4 +1,4 @@
-/* Copyright © 2021 Seneca Open Source, MIT License. */
+/* Copyright © 2021 Seneca Project Contributors, MIT License. */
 
 
 type EventbriteProviderOptions = {}

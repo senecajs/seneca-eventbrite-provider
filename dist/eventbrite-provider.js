@@ -1,5 +1,5 @@
 "use strict";
-/* Copyright © 2021 Seneca Open Source, MIT License. */
+/* Copyright © 2021 Seneca Project Contributors, MIT License. */
 Object.defineProperty(exports, "__esModule", { value: true });
 function EventbriteProvider(options) {
     const seneca = this;
