@@ -15,6 +15,8 @@ if (Fs.existsSync('./local-config.js')) {
   Object.assign(CONFIG, require('./local-config.js'))
 }
 
+jest.setTimeout(10000)
+
 describe('eventbrite-provider', () => {
 
   let providerOptions = {
