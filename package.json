@@ -48,5 +48,8 @@
   "peerDependencies": {
     "seneca": ">=3",
     "seneca-promisify": ">=2"
+  },
+  "dependencies": {
+    "seneca-entity": "^16.0.3"
   }
 }
