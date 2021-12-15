@@ -1,6 +1,7 @@
 /* Copyright © 2021 Seneca Project Contributors, MIT License. */
 
 import * as Fs from 'fs'
+import crypto from 'crypto';
 
 import EventbriteProvider from '../src/eventbrite-provider'
 
