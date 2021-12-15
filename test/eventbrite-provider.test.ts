@@ -62,6 +62,24 @@ describe('eventbrite-provider', () => {
     expect(event).toHaveProperty('description')
   })
 
+  test('entity-save', async () => {
+    const seneca = Seneca({ legacy:false })
+      .test()
+      .use('promisify')
+      .use('entity')
+      .use('provider', providerOptions)
+      .use(EventbriteProvider)
+    
+    let event = await seneca.entity('eventbrite/event').load$('228153231457')
+
+    const randomBytes = crypto.randomBytes(12).toString('hex')
+    
+    event.description.html = randomBytes    
+    event = await event.save$();
+
+    expect(event.description.html).toEqual(randomBytes)
+  })
+
   test('messages', async () => {
     const seneca = Seneca({ legacy: false })
       .test()
