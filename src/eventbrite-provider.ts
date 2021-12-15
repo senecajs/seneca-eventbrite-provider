@@ -13,8 +13,8 @@ function EventbriteProvider(this: any, options: any) {
 
   let eventbriteSDK: Sdk
 
-  // seneca.message('role:entity,cmd:load')
-
+  seneca
+    .message('role:entity,cmd:load,base:eventbrite,name:event', loadEvent)
 
 
   seneca.prepare(async function(this: any) {
@@ -28,7 +28,19 @@ function EventbriteProvider(this: any, options: any) {
     }
   })
 
+  async function loadEvent(this: any, msg: any) {
+    const q: any = msg.q
+    const eventID: string = q.id
 
+    const event: any = await eventbriteSDK.request(`/events/${eventID}`)
+
+    if(event.id) {
+      event.eventbrite_id = event.id
+      event.id = eventID
+    }
+
+    return this.make$('eventbrite/event').data$(event)
+  }
 }
 
 
