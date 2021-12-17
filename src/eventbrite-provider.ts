@@ -14,8 +14,8 @@ function EventbriteProvider(this: any, options: any) {
   let eventbriteSDK: Sdk
 
   seneca
-    .message('role:entity,cmd:load,base:eventbrite,name:event', loadEvent)
-    .message('role:entity,cmd:save,base:eventbrite,name:event', saveEvent)
+    .message('role:entity,cmd:load,zone:provider,base:eventbrite,name:event', loadEvent)
+    .message('role:entity,cmd:save,zone:provider,base:eventbrite,name:event', saveEvent)
 
 
   seneca.prepare(async function(this: any) {

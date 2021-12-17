@@ -27,8 +27,8 @@ Read more on [getting a token](https://www.eventbrite.com/platform/api#/introduc
 
 ## Action Patterns
 
-* [role:entity,base:eventbrite,cmd:load,name:event](#-roleentitybaseeventbritecmdloadnameevent-)
-* [role:entity,base:eventbrite,cmd:save,name:event](#-roleentitybaseeventbritecmdsavenameevent-)
+* [role:entity,base:eventbrite,cmd:load,name:event,zone:provider](#-roleentitybaseeventbritecmdloadnameeventzoneprovider-)
+* [role:entity,base:eventbrite,cmd:save,name:event,zone:provider](#-roleentitybaseeventbritecmdsavenameeventzoneprovider-)
 
 
 <!--END:action-list-->
@@ -38,14 +38,14 @@ Read more on [getting a token](https://www.eventbrite.com/platform/api#/introduc
 
 ## Action Descriptions
 
-### &laquo; `role:entity,base:eventbrite,cmd:load,name:event` &raquo;
+### &laquo; `role:entity,base:eventbrite,cmd:load,name:event,zone:provider` &raquo;
 
 Load an Eventbrite event data into an entity.
 
 
 
 ----------
-### &laquo; `role:entity,base:eventbrite,cmd:save,name:event` &raquo;
+### &laquo; `role:entity,base:eventbrite,cmd:save,name:event,zone:provider` &raquo;
 
 Update an Eventbrite event data from an entity.
 
