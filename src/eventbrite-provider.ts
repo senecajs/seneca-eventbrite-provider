@@ -40,7 +40,7 @@ function EventbriteProvider(this: any, options: any) {
       event.id = eventID
     }
 
-    return this.make$('eventbrite/event').data$(event)
+    return this.make$('provider/eventbrite/event').data$(event)
   }
 
   async function saveEvent(this: any, msg: any) {
@@ -66,7 +66,7 @@ function EventbriteProvider(this: any, options: any) {
       event.id = eventID
     }
 
-    return this.make$('eventbrite/event').data$(event)
+    return this.make$('provider/eventbrite/event').data$(event)
   }
 }
 
