@@ -14,3 +14,10 @@ Handle incoming messages within other frameworks.
 | ![Voxgig](https://www.voxgig.com/res/img/vgt01r.png) | This open source module is sponsored and supported by [Voxgig](https://www.voxgig.com). |
 |---|---|
 
+## Getting an Eventbrite API Key
+
+Before you can start interacting with Eventbrite, you'll need to :
+* [Create an account](https://www.eventbrite.com/signin/).
+* Go to the [Developer Portal](https://www.eventbrite.com/platform/) and click "Get a Free API Key" to retrieve your API key.
+
+Read more on [getting a token](https://www.eventbrite.com/platform/api#/introduction/authentication).
