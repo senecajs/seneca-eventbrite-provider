@@ -2,14 +2,16 @@
 
 import * as Fs from 'fs'
 import crypto from 'crypto';
+import dotenv from 'dotenv'
 
 import EventbriteProvider from '../src/eventbrite-provider'
 
+dotenv.config();
 const Seneca = require('seneca')
 const SenecaMsgTest = require('seneca-msg-test')
 const EventbriteProviderMessages = require('./eventbrite-provider.messages').default
 
-const CONFIG: any = {}
+const CONFIG: any = {key : process.env.EVENTBRITE_API_KEY}
 
 if (Fs.existsSync('./local-config.js')) {
   Object.assign(CONFIG, require('./local-config.js'))
