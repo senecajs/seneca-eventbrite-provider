@@ -21,3 +21,37 @@ Before you can start interacting with Eventbrite, you'll need to :
 * Go to the [Developer Portal](https://www.eventbrite.com/platform/) and click "Get a Free API Key" to retrieve your API key.
 
 Read more on [getting a token](https://www.eventbrite.com/platform/api#/introduction/authentication).
+
+<!--START:action-list-->
+
+
+## Action Patterns
+
+* [role:entity,base:eventbrite,cmd:load,name:event](#-roleentitybaseeventbritecmdloadnameevent-)
+* [role:entity,base:eventbrite,cmd:save,name:event](#-roleentitybaseeventbritecmdsavenameevent-)
+
+
+<!--END:action-list-->
+
+<!--START:action-desc-->
+
+
+## Action Descriptions
+
+### &laquo; `role:entity,base:eventbrite,cmd:load,name:event` &raquo;
+
+Load an Eventbrite event data into an entity.
+
+
+
+----------
+### &laquo; `role:entity,base:eventbrite,cmd:save,name:event` &raquo;
+
+Update an Eventbrite event data from an entity.
+
+
+
+----------
+
+
+<!--END:action-desc-->
