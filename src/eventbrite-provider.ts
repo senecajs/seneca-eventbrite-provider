@@ -51,7 +51,7 @@ function EventbriteProvider(this: any, options: any) {
     })
 
     // Missing a slash at the end of the URL cause the Fetch API to not handle POST requests correctly.
-    const event: any = await eventbriteSDK.request(`/events/${eventID}/`, {
+    const event: any = await eventbrite.request(`/events/${eventID}/`, {
       method:'POST',
       body,
     })
