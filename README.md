@@ -22,6 +22,31 @@ Before you can start interacting with Eventbrite, you'll need to :
 
 Read more on [getting a token](https://www.eventbrite.com/platform/api#/introduction/authentication).
 
+<!--START:options-->
+
+
+## Options
+
+* `debug` : boolean <i><small>false</small></i>
+
+
+Set plugin options when loading with:
+```js
+
+
+seneca.use('EventbriteProvider', { name: value, ... })
+
+
+```
+
+
+<small>Note: <code>foo.bar</code> in the list above means 
+<code>{ foo: { bar: ... } }</code></small> 
+
+
+
+<!--END:options-->
+
 <!--START:action-list-->
 
 
