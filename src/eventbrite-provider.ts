@@ -63,6 +63,9 @@ function EventbriteProvider(this: any, options: any) {
 
 // Default options.
 const defaults: EventbriteProviderOptions = {
+
+  // TODO: Enable debug logging
+  debug: false
 }
 
 
