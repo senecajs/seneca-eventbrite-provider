@@ -59,7 +59,7 @@ describe('eventbrite-provider', () => {
         .use('provider', providerOptions)
         .use(EventbriteProvider)
       
-      const event = await seneca.entity('eventbrite/event').load$('214728557897');
+      const event = await seneca.entity('eventbrite/event').load$('214728557897')
       expect(event).toBeDefined()
       expect(event.id).toEqual('214728557897')
       expect(event).toHaveProperty('name')
