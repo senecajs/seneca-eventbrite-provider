@@ -34,11 +34,6 @@ function EventbriteProvider(this: any, options: any) {
 
     const event: any = await eventbrite.request(`/events/${eventID}`)
 
-    if(event.id) {
-      event.eventbrite_id = event.id
-      event.id = eventID
-    }
-
     return this.make$('eventbrite/event').data$(event)
   }
 }
