@@ -56,11 +56,6 @@ function EventbriteProvider(this: any, options: any) {
       body,
     })
 
-    if(event.id) {
-      event.eventbrite_id = event.id
-      event.id = eventID
-    }
-
     return this.make$('eventbrite/event').data$(event)
   }
 }
