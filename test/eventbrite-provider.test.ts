@@ -1,7 +1,7 @@
 /* Copyright © 2021 Seneca Project Contributors, MIT License. */
 
 import * as Fs from 'fs'
-import crypto from 'crypto';
+import crypto from 'crypto'
 
 import EventbriteProvider from '../src/eventbrite-provider'
 
@@ -59,7 +59,7 @@ describe('eventbrite-provider', () => {
         .use('provider', providerOptions)
         .use(EventbriteProvider)
       
-      const event = await seneca.entity('eventbrite/event').load$('214728557897');
+      const event = await seneca.entity('provider/eventbrite/event').load$('214728557897');
       expect(event).toBeDefined()
       expect(event.id).toEqual('214728557897')
       expect(event).toHaveProperty('name')
@@ -76,14 +76,14 @@ describe('eventbrite-provider', () => {
         .use('provider', providerOptions)
         .use(EventbriteProvider)
     
-      let event = await seneca.entity('eventbrite/event').load$('228153231457')
+      let event = await seneca.entity('provider/eventbrite/event').load$('228153231457')
 
       const randomBytes = crypto.randomBytes(12).toString('hex')
       
-      event.description.html = randomBytes    
+      event.summary = randomBytes    
       event = await event.save$();
 
-      expect(event.description.html).toEqual(randomBytes)
+      expect(event.summary).toEqual(randomBytes)
     }
   })
 
