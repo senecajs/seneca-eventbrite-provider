@@ -45,7 +45,7 @@ function EventbriteProvider(this: any, options: any) {
     const body = JSON.stringify({
       event: {
         description: {
-          html: ent.description.html,
+          html: ent.summary,
         },
       },
     })

@@ -80,10 +80,10 @@ describe('eventbrite-provider', () => {
 
       const randomBytes = crypto.randomBytes(12).toString('hex')
       
-      event.description.html = randomBytes    
+      event.summary = randomBytes    
       event = await event.save$();
 
-      expect(event.description.html).toEqual(randomBytes)
+      expect(event.summary).toEqual(randomBytes)
     }
   })
 
