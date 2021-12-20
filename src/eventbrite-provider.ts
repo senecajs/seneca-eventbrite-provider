@@ -1,7 +1,7 @@
 /* Copyright © 2021 Seneca Project Contributors, MIT License. */
 
-import Eventbrite from 'eventbrite';
-import { Sdk } from 'eventbrite/lib/types';
+import Eventbrite from 'eventbrite'
+import { Sdk } from 'eventbrite/lib/types'
 
 type EventbriteProviderOptions = {}
 
