@@ -11,7 +11,7 @@ function EventbriteProvider(this: any, options: any) {
 
   let API_KEY = ''
 
-  let eventbriteSDK: Sdk
+  let eventbrite: Sdk
 
   seneca
     .message('role:entity,cmd:load,base:eventbrite,name:event', loadEvent)
@@ -21,7 +21,7 @@ function EventbriteProvider(this: any, options: any) {
     let out = await this.post('sys:provider,get:key,provider:eventbrite,key:api')
     if (out.ok) {
       API_KEY = out.value
-      eventbriteSDK = Eventbrite({token: API_KEY})
+      eventbrite = Eventbrite({token: API_KEY})
     }
     else {
       this.fail('api-key-missing')
@@ -32,7 +32,7 @@ function EventbriteProvider(this: any, options: any) {
     const q: any = msg.q
     const eventID: string = q.id
 
-    const event: any = await eventbriteSDK.request(`/events/${eventID}`)
+    const event: any = await eventbrite.request(`/events/${eventID}`)
 
     if(event.id) {
       event.eventbrite_id = event.id
