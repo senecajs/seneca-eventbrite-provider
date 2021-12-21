@@ -21,6 +21,7 @@
     "test-watch": "jest --coverage --watchAll",
     "watch": "tsc -w -d",
     "build": "tsc -d",
+    "doc": "seneca-doc",
     "clean": "rm -rf node_modules yarn.lock package-lock.json",
     "reset": "npm run clean && npm i && npm test",
     "repo-tag": "REPO_VERSION=`node -e \"console.log(require('./package').version)\"` && echo TAG: v$REPO_VERSION && git commit -a -m v$REPO_VERSION && git push && git tag v$REPO_VERSION && git push --tags;",
@@ -34,6 +35,7 @@
     "LICENSE"
   ],
   "devDependencies": {
+    "@seneca/doc": "^4.0.1",
     "@seneca/provider": "^0.1.0",
     "@types/jest": "^27.0.3",
     "@types/node": "^16.11.12",

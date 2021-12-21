@@ -14,8 +14,8 @@ function EventbriteProvider(this: any, options: any) {
   let eventbrite: Sdk
 
   seneca
-    .message('role:entity,cmd:load,base:eventbrite,name:event', loadEvent)
-    .message('role:entity,cmd:save,base:eventbrite,name:event', saveEvent)
+    .message('role:entity,cmd:load,zone:provider,base:eventbrite,name:event', loadEvent)
+    .message('role:entity,cmd:save,zone:provider,base:eventbrite,name:event', saveEvent)
 
 
   seneca.prepare(async function(this: any) {
@@ -35,7 +35,7 @@ function EventbriteProvider(this: any, options: any) {
 
     const event: any = await eventbrite.request(`/events/${eventID}`)
 
-    return this.make$('eventbrite/event').data$(event)
+    return this.make$('provider/eventbrite/event').data$(event)
   }
 
   async function saveEvent(this: any, msg: any) {
@@ -56,13 +56,16 @@ function EventbriteProvider(this: any, options: any) {
       body,
     })
 
-    return this.make$('eventbrite/event').data$(event)
+    return this.make$('provider/eventbrite/event').data$(event)
   }
 }
 
 
 // Default options.
 const defaults: EventbriteProviderOptions = {
+
+  // TODO: Enable debug logging
+  debug: false
 }
 
 

@@ -14,3 +14,69 @@ Handle incoming messages within other frameworks.
 | ![Voxgig](https://www.voxgig.com/res/img/vgt01r.png) | This open source module is sponsored and supported by [Voxgig](https://www.voxgig.com). |
 |---|---|
 
+## Getting an Eventbrite API Key
+
+Before you can start interacting with Eventbrite, you'll need to :
+* [Create an account](https://www.eventbrite.com/signin/).
+* Go to the [Developer Portal](https://www.eventbrite.com/platform/) and click "Get a Free API Key" to retrieve your API key.
+
+Read more on [getting a token](https://www.eventbrite.com/platform/api#/introduction/authentication).
+
+<!--START:options-->
+
+
+## Options
+
+* `debug` : boolean <i><small>false</small></i>
+
+
+Set plugin options when loading with:
+```js
+
+
+seneca.use('EventbriteProvider', { name: value, ... })
+
+
+```
+
+
+<small>Note: <code>foo.bar</code> in the list above means 
+<code>{ foo: { bar: ... } }</code></small> 
+
+
+
+<!--END:options-->
+
+<!--START:action-list-->
+
+
+## Action Patterns
+
+* [role:entity,base:eventbrite,cmd:load,name:event,zone:provider](#-roleentitybaseeventbritecmdloadnameeventzoneprovider-)
+* [role:entity,base:eventbrite,cmd:save,name:event,zone:provider](#-roleentitybaseeventbritecmdsavenameeventzoneprovider-)
+
+
+<!--END:action-list-->
+
+<!--START:action-desc-->
+
+
+## Action Descriptions
+
+### &laquo; `role:entity,base:eventbrite,cmd:load,name:event,zone:provider` &raquo;
+
+Load an Eventbrite event data into an entity.
+
+
+
+----------
+### &laquo; `role:entity,base:eventbrite,cmd:save,name:event,zone:provider` &raquo;
+
+Update an Eventbrite event data from an entity.
+
+
+
+----------
+
+
+<!--END:action-desc-->
