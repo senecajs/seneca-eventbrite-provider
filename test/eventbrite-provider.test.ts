@@ -1,5 +1,8 @@
 /* Copyright © 2021 Seneca Project Contributors, MIT License. */
 
+
+// https://www.eventbrite.com/manage/events/230866526997/details
+
 import * as Fs from 'fs'
 import crypto from 'crypto'
 
@@ -11,8 +14,8 @@ const EventbriteProviderMessages = require('./eventbrite-provider.messages').def
 
 const CONFIG: any = {}
 
-if (Fs.existsSync('./local-config.js')) {
-  Object.assign(CONFIG, require('./local-config.js'))
+if (Fs.existsSync(__dirname + '/local-config.js')) {
+  Object.assign(CONFIG, require(__dirname + '/local-config.js'))
 }
 
 jest.setTimeout(10000)
@@ -51,39 +54,44 @@ describe('eventbrite-provider', () => {
   })
 
   test('entity-load', async () => {
-    if(CONFIG.key) {
-      const seneca = Seneca({ legacy:false })
+    if (CONFIG.key) {
+      const seneca = Seneca({ legacy: false })
         .test()
         .use('promisify')
         .use('entity')
         .use('provider', providerOptions)
         .use(EventbriteProvider)
-      
-      const event = await seneca.entity('provider/eventbrite/event').load$('214728557897');
+
+      const event = await seneca.entity('provider/eventbrite/event').load$('214728557897')
+
       expect(event).toBeDefined()
       expect(event.id).toEqual('214728557897')
       expect(event).toHaveProperty('name')
       expect(event).toHaveProperty('description')
+      expect(event.entity$).toEqual('provider/eventbrite/event')
     }
   })
 
   test('entity-save', async () => {
-    if(CONFIG.key) {
-      const seneca = Seneca({ legacy:false })
+    if (CONFIG.key) {
+      const seneca = Seneca({ legacy: false })
         .test()
         .use('promisify')
         .use('entity')
         .use('provider', providerOptions)
         .use(EventbriteProvider)
-    
-      let event = await seneca.entity('provider/eventbrite/event').load$('228153231457')
+
+      // let event = await seneca.entity('provider/eventbrite/event').load$('228153231457')
+      let event = await seneca.entity('provider/eventbrite/event').load$('230866526997')
 
       const randomBytes = crypto.randomBytes(12).toString('hex')
-      
-      event.summary = randomBytes    
+
+      event.summary = randomBytes
       event = await event.save$();
 
       expect(event.summary).toEqual(randomBytes)
+      expect(event.entity$).toEqual('provider/eventbrite/event')
+
     }
   })
 
