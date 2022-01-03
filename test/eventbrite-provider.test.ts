@@ -87,7 +87,7 @@ describe('eventbrite-provider', () => {
       const randomBytes = crypto.randomBytes(12).toString('hex')
 
       event.summary = randomBytes
-      event = await event.save$();
+      event = await event.save$()
 
       expect(event.summary).toEqual(randomBytes)
       expect(event.entity$).toEqual('provider/eventbrite/event')
