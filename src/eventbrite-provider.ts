@@ -14,12 +14,12 @@ function EventbriteProvider(this: any, options: any) {
 
   let eventbrite: Sdk
 
-  const inital_args: any = {
+  const initial_args: any = {
     ZONE_BASE: 'provider/eventbrite/',
     eventbrite: undefined,
   }
 
-  const commands = init_commands(inital_args)
+  const commands = init_commands(initial_args)
 
   seneca
     .message('role:entity,cmd:load,zone:provider,base:eventbrite,name:event', loadEvent)
@@ -32,8 +32,8 @@ function EventbriteProvider(this: any, options: any) {
     if (out.ok) {
       API_KEY = out.value
 
-      eventbrite = inital_args.eventbrite = Eventbrite({ token: API_KEY })
-      Object.freeze(inital_args)
+      eventbrite = initial_args.eventbrite = Eventbrite({ token: API_KEY })
+      Object.freeze(initial_args)
     }
     else {
       this.fail('api-key-missing')
