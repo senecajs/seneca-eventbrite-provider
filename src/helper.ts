@@ -15,4 +15,13 @@ function handle_request(request_action: CallableFunction, path: string) {
   }
 }
 
-export { handle_request }
+function build_query_str(parameters: Record<string, any>): String {
+  if(!parameters) {return ''} // if object has no attributes
+
+  return '?' + 
+  Object.keys(parameters)
+  .map((param) => param + '=' + `${parameters[param]}`)
+  .join('&')
+}
+
+export { handle_request, build_query_str }
