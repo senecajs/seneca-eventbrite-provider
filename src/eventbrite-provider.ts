@@ -2,6 +2,7 @@
 
 import Eventbrite from 'eventbrite'
 import { Sdk } from 'eventbrite/lib/types'
+import init_commands from './init-commands'
 
 type EventbriteProviderOptions = {}
 
@@ -13,6 +14,13 @@ function EventbriteProvider(this: any, options: any) {
 
   let eventbrite: Sdk
 
+  const inital_args: any = {
+    ZONE_BASE: 'provider/eventbrite/',
+    eventbrite: undefined,
+  }
+
+  const commands = init_commands(inital_args)
+
   seneca
     .message('role:entity,cmd:load,zone:provider,base:eventbrite,name:event', loadEvent)
     .message('role:entity,cmd:save,zone:provider,base:eventbrite,name:event', saveEvent)
@@ -22,7 +30,9 @@ function EventbriteProvider(this: any, options: any) {
     let out = await this.post('sys:provider,get:key,provider:eventbrite,key:api')
     if (out.ok) {
       API_KEY = out.value
-      eventbrite = Eventbrite({ token: API_KEY })
+
+      eventbrite = inital_args.eventbrite = Eventbrite({ token: API_KEY })
+      Object.freeze(inital_args)
     }
     else {
       this.fail('api-key-missing')
