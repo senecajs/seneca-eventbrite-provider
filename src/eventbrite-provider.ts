@@ -25,6 +25,7 @@ function EventbriteProvider(this: any, options: any) {
     .message('role:entity,cmd:load,zone:provider,base:eventbrite,name:event', loadEvent)
     .message('role:entity,cmd:save,zone:provider,base:eventbrite,name:event', saveEvent)
 
+    .message('role:entity,cmd:load,zone:provider,base:eventbrite,name:category', commands.category.load_category)
 
   seneca.prepare(async function(this: any) {
     let out = await this.post('sys:provider,get:key,provider:eventbrite,key:api')
