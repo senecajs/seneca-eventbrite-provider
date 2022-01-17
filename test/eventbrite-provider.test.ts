@@ -5,7 +5,7 @@
 
 import * as Fs from 'fs'
 import crypto from 'crypto'
-
+import { entities as entities_map } from "../src/entities"
 import EventbriteProvider from '../src/eventbrite-provider'
 
 const Seneca = require('seneca')
@@ -22,6 +22,23 @@ jest.setTimeout(10000)
 
 describe('eventbrite-provider', () => {
 
+// Separate entities details by their command type
+const entities_load = {}
+const entities_save = {}
+
+Object.keys(entities_map).forEach(ent_name => {
+  const entity = entities_map[ent_name]
+  entity.commands.forEach(cmd => {
+    if(cmd.cmd === 'load') {
+      entities_load[ent_name] = entity
+    }
+    if(cmd.cmd === 'save') {
+      entities_save[ent_name] = entity
+    }
+  })
+})
+
+// Set common structure between tests
   let providerOptions = {
     provider: {
       eventbrite: {
@@ -113,6 +130,51 @@ describe('eventbrite-provider', () => {
       .use(EventbriteProvider)
     await (SenecaMsgTest(seneca, EventbriteProviderMessages)())
   })
+
+  describe("eventbrite-entities-load", () => {
+    Object.keys(entities_load).forEach(ent_name => {
+      let entity = entities_map[ent_name]
+      const full = "provider/eventbrite/" + ent_name
+  
+      test(`load-${ent_name}` , async () => {
+        const seneca = Seneca({ legacy: false })
+          .test()
+          .use("promisify")
+          .use("entity")
+          .use("provider", providerOptions)
+          .use(EventbriteProvider)
+  
+        const tests = entity.tests
+  
+        let res_data = await seneca.entity(full).load$(tests['load'].args)
+  
+        expect(res_data.entity$).toBe(full)
+        
+        const expectations = tests['load'].expectations
+  
+        if(expectations) {
+          assert(expectations, res_data)
+        } else {
+          expect(res_data.id).toBeDefined()
+        }
+      })
+    })
+  })
+
+  function assert(expectations: any, against: any) {
+    Object.keys(expectations).forEach(field_to_assert => {
+      Object.keys(expectations[field_to_assert]).forEach(assertion => {
+        switch (assertion) {
+          case 'sameAs':                
+            expect(against[field_to_assert]).toBe(expectations[field_to_assert]['sameAs'])
+            break
+  
+          default:
+            break
+        }
+      })
+    })
+  }
 
 })
 
