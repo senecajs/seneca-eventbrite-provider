@@ -3,7 +3,7 @@ const test_args = {
     category_id: '101',
 }
 
-const entities = {
+const entities: any = {
   category: {
     fields: [],
     commands: [

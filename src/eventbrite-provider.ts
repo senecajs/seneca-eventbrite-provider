@@ -24,7 +24,7 @@ function EventbriteProvider(this: any, options: any) {
     Object.keys(ent_map).forEach((ent_name) => {
       const commands = ent_map[ent_name].commands
 
-      commands.forEach((command_details) => {
+      commands.forEach((command_details: any) => {
         const common = { zone: "provider", base: "eventbrite", role: "entity" }
         const cmd_name = command_details.cmd
 
