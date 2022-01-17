@@ -2,6 +2,9 @@
 
 import Eventbrite from 'eventbrite'
 import { Sdk } from 'eventbrite/lib/types'
+import { cmd_handlers } from './cmd-handlers'
+import { entities as ent_map } from './entities'
+import { handle_request } from './helpers'
 
 type EventbriteProviderOptions = {}
 
@@ -17,6 +20,48 @@ function EventbriteProvider(this: any, options: any) {
     .message('role:entity,cmd:load,zone:provider,base:eventbrite,name:event', loadEvent)
     .message('role:entity,cmd:save,zone:provider,base:eventbrite,name:event', saveEvent)
 
+  function add_actions() {
+    Object.keys(ent_map).forEach((ent_name) => {
+      const commands = ent_map[ent_name].commands
+
+      commands.forEach((command_details) => {
+        const common = { zone: "provider", base: "eventbrite", role: "entity" }
+        const cmd_name = command_details.cmd
+
+        const pattern = {
+          name: ent_name,
+          cmd: cmd_name,
+          ...common,
+        }
+
+        const action = init_request(command_details.path)
+
+        const handler = cmd_handlers(
+          action,
+          command_details.body_args,
+          command_details.include,
+          command_details.query_params
+        )
+
+        seneca.message(pattern, handler)
+      })
+    })
+  }
+
+  function init_request(path: string) {
+    return async(args: Record<string,any>, options: RequestInit) => {
+      const matches_obj = path.matchAll(new RegExp(/:(.[^\/]+)/g))
+      const matches_arr = [...matches_obj]
+
+      matches_arr.forEach(match => {
+        const url_placeholder = match[0]
+        const url_placeholder_name = match[1]
+        path = path.replace(url_placeholder, args[url_placeholder_name])
+      })
+      const handle = handle_request(eventbrite.request, path)
+      return handle(options)
+    }
+  }
 
   seneca.prepare(async function(this: any) {
     let out = await this.post('sys:provider,get:key,provider:eventbrite,key:api')
@@ -27,6 +72,8 @@ function EventbriteProvider(this: any, options: any) {
     else {
       this.fail('api-key-missing')
     }
+
+    add_actions()
   })
 
 
