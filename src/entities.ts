@@ -5,8 +5,6 @@ const test_args = {
     category_id: '101',
 }
 
-const rand = crypto.randomBytes(10).toString('hex')
-
 const entities = {
   category: {
     fields: [],
