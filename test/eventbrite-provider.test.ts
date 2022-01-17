@@ -7,6 +7,8 @@ import * as Fs from 'fs'
 import crypto from 'crypto'
 import { entities as entities_map } from "../src/entities"
 import EventbriteProvider from '../src/eventbrite-provider'
+import { set_mock_worker } from './set-mock-worker'
+import { mocks } from './mocks'
 
 const Seneca = require('seneca')
 const SenecaMsgTest = require('seneca-msg-test')
@@ -19,6 +21,12 @@ if (Fs.existsSync(__dirname + '/local-config.js')) {
 }
 
 jest.setTimeout(10000)
+
+// Configure mock service worker
+const worker = set_mock_worker(mocks)
+
+beforeAll(() => worker.listen())
+afterAll(() => worker.close())
 
 describe('eventbrite-provider', () => {
 
