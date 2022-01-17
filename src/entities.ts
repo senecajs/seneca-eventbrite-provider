@@ -1,5 +1,3 @@
-import crypto from 'crypto'
-
 const test_args = {
     discount_id: '609282579',
     category_id: '101',
