@@ -1,39 +1,44 @@
-function cmd_handlers(reqFn: CallableFunction, body_args: Array<string> = [], include?: string[], query_params?: Record<string, any>) {
+function cmd_handlers(initialized_req_handler: CallableFunction, body_args: Array<string> = [], include?: string[], query_params?: Record<string, any>) {
   async function handler(this:any, msg: any) {
     let body: any = {}
     let source: any
-    let args
+    let aditional_args
+    let path_args
+    let method
 
     switch (msg.cmd) {
       case 'load':
+        method = 'get'
         source = {...msg.q}
-        args = source
-        break;
+        aditional_args = {}
+        path_args = source
+        break
       case 'save':
+        method = 'post'
         source = {...msg.ent}
-        args = {...msg.q}
-        break;
+        aditional_args = {...msg.q}
+        path_args = {...source, ...aditional_args}
+        break
     
       default:
         throw new Error('Unknown command : ' + msg.cmd)
     }
 
-    if(source.event_id) {
-      body = {
-        // TODO: handle event_id if needed
-      }
-    }
-
-    const old_source = {...source}
-    delete source.event_id
+    const request = initialized_req_handler(path_args)
 
     body_args.forEach(body_arg => {
       body[body_arg] = source[body_arg] 
-    })
-    
-    body = {...body, ...args}
+    })    
+    body = {...body, ...aditional_args}
 
-    let res = await reqFn(body)
+    const options = {
+      method,
+      body: JSON.stringify({
+        event: body
+      })
+    } 
+
+    let res = await request(options)
 
     if (include) {
       include.forEach((item) => {
@@ -41,9 +46,9 @@ function cmd_handlers(reqFn: CallableFunction, body_args: Array<string> = [], in
           const [attr, new_attr_name] = item
             .split(' as ')
             .map((item) => item.trim())
-          res[new_attr_name] = old_source[attr]
+          res[new_attr_name] = source[attr]
         } else {
-          res[item] = old_source[item]
+          res[item] = source[item]
         }
       })
     }
