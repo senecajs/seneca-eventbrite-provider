@@ -1,7 +1,7 @@
-function handle_request(request_action: CallableFunction, path: string) {
-  return async (options?: Record<string, any>) => {
+function request(request_action: CallableFunction, path: string) {
+  return async (options: Record<string, any>) => {
     try {
-      if (options) {
+      if (options.method !== 'get') {
         let out = await request_action(path, options)
         return out
       }
@@ -15,4 +15,4 @@ function handle_request(request_action: CallableFunction, path: string) {
   }
 }
 
-export { handle_request }
+export { request }
