@@ -169,6 +169,42 @@ Object.keys(entities_map).forEach(ent_name => {
     })
   })
 
+  describe("eventbrite-entities-save", () => {
+    Object.keys(entities_save).forEach(ent_name => {
+      let entity_details = entities_map[ent_name]
+      const full = "provider/eventbrite/" + ent_name
+  
+      test(`save-${ent_name}` , async () => {
+        const seneca = Seneca({ legacy: false })
+          .test()
+          .use("promisify")
+          .use("entity")
+          .use("provider", providerOptions)
+          .use(EventbriteProvider)
+  
+        const load_test = entity_details.tests['load']
+        const save_test = entity_details.tests['save']
+  
+        let entity = await seneca.entity(full).load$(load_test.args)
+  
+        expect(entity.entity$).toBe(full)
+  
+        // Apply changes and save
+        const changes = save_test.changes
+        Object.keys(save_test.changes).forEach(change => {
+          entity[change] = changes[change] 
+        })
+        entity = await entity.save$(save_test.args)
+  
+        // Assertions
+        const expectations = save_test.expectations
+        expectations
+          ? assert(expectations, entity)
+          : expect(entity.id).toBeDefined() // check for a ID when no expectations were set
+      })
+    })
+  })
+
   function assert(expectations: any, against: any) {
     Object.keys(expectations).forEach(field_to_assert => {
       Object.keys(expectations[field_to_assert]).forEach(assertion => {
