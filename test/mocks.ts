@@ -39,6 +39,7 @@ const mocks = {
       url: "/events/:event_id/inventory_tiers/:inventory_tier/",
       mock_data: {
         id: "11195969",
+        event_id: "238083523227",
       },
     },
   },

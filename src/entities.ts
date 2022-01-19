@@ -210,6 +210,9 @@ const entities: any = {
           id: {
             sameAs: test_args.inventory_tier,
           },
+          event_id: {
+            sameAs: test_args.event_id,
+          },
         },
       },
     },
