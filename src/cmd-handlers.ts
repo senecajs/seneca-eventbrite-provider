@@ -1,23 +1,23 @@
-function cmd_handlers(initialized_req_handler: CallableFunction, body_args: Array<string> = [], include?: string[], query_params?: Record<string, any>) {
+function cmd_handlers(initialized_req_handler: CallableFunction, body_args: Record<string, string> = {}, include?: string[], query_params?: Record<string, any>) {
   async function handler(this:any, msg: any) {
     let body: any = {}
     let source: any
-    let aditional_args
-    let path_args
+    let args: Record<string, any>
+    let path_args: Record<string, any>
     let method
 
     switch (msg.cmd) {
       case 'load':
         method = 'get'
         source = {...msg.q}
-        aditional_args = {}
+        args = {}
         path_args = source
         break
       case 'save':
         method = 'post'
         source = {...msg.ent}
-        aditional_args = {...msg.q}
-        path_args = {...source, ...aditional_args}
+        args = {...msg.q}
+        path_args = {...source, ...args}
         break
     
       default:
@@ -26,19 +26,24 @@ function cmd_handlers(initialized_req_handler: CallableFunction, body_args: Arra
 
     const request = initialized_req_handler(path_args)
 
-    body_args.forEach(body_arg => {
-      body[body_arg] = source[body_arg] 
-    })    
-    body = {...body, ...aditional_args}
+    let data_sources: Record<string, Record<string,any>> = {
+      ent: source,
+      args
+    }
+
+    body = build_body_recursively(body_args, data_sources, body)
 
     const options = {
       method,
-      body: JSON.stringify({
-        event: body
-      })
+      body: JSON.stringify(body)
     } 
 
     let res = await request(options)
+
+    // TODO : handle inventory_tier return case better
+    if(Object.keys(res).length == 1 && Object.keys(res)[0] === 'inventory_tier') {
+      res = Object.keys(res).map(k => res[k])[0]
+    }
 
     if (include) {
       include.forEach((item) => {
