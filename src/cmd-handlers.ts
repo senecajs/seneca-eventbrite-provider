@@ -56,6 +56,17 @@ function cmd_handlers(initialized_req_handler: CallableFunction, body_args: Arra
     return this.make$(msg.ent.entity$).data$(res)
   }
 
+  function set_attributes(attributes: Array<string>, data_source: Record<string,any>) {
+    const data = attributes.reduce((previous: Record<string, any>, current: any, index, arr) => {
+      if(!current || !previous) {
+        return {}
+      }
+      return previous[current]
+    }, data_source)
+    
+    return data
+  }
+
   return handler
 }
 
