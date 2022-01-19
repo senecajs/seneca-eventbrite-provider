@@ -1,6 +1,6 @@
-function cmd_handlers(initialized_req_handler: CallableFunction, body_args: Record<string, string> = {}, include?: string[], query_params?: Record<string, any>) {
+function cmd_handlers(initialized_req_handler: CallableFunction, body_specs: Record<string, string> = {}, include?: string[], query_params?: Record<string, any>) {
   async function handler(this:any, msg: any) {
-    let body: any = {}
+    let request_body: any = {}
     let source: any
     let args: Record<string, any>
     let path_args: Record<string, any>
@@ -31,11 +31,11 @@ function cmd_handlers(initialized_req_handler: CallableFunction, body_args: Reco
       args
     }
 
-    body = build_body_recursively(body_args, data_sources, body)
+    request_body = build_body_recursively(body_specs, data_sources, request_body)
 
     const options = {
       method,
-      body: JSON.stringify(body)
+      body: JSON.stringify(request_body)
     } 
 
     let res = await request(options)
@@ -61,18 +61,18 @@ function cmd_handlers(initialized_req_handler: CallableFunction, body_args: Reco
     return this.make$(msg.ent.entity$).data$(res)
   }
 
-  function build_body_recursively(body_args: any, data_sources: any, body: any) {
-    Object.keys(body_args).forEach(body_arg_key => {
-      const pattern = body_args[body_arg_key]
+  function build_body_recursively(body_specs: any, data_sources: any, request_body: any) {
+    Object.keys(body_specs).forEach(body_arg_key => {
+      const body_attr_spec = body_specs[body_arg_key]
 
-      if(typeof pattern === 'object' ) {
+      if(typeof body_attr_spec === 'object' ) {
         const recursive_body = {}
-        const data = build_body_recursively(pattern, data_sources, recursive_body)
-        body[body_arg_key] = data
+        const data = build_body_recursively(body_attr_spec, data_sources, recursive_body)
+        request_body[body_arg_key] = data
         return
       }
 
-      const patterns = pattern.split('.')
+      const patterns = body_attr_spec.split('.')
 
       const data_source = patterns.splice(0, 1)
       const attrs = patterns.splice(0)
@@ -86,9 +86,9 @@ function cmd_handlers(initialized_req_handler: CallableFunction, body_args: Reco
       const from = data_sources[data_source_name]
       const data = set_attributes(attrs, from)
 
-      body[body_arg_key] = data
+      request_body[body_arg_key] = data
     })
-    return body
+    return request_body
   }
 
   function set_attributes(attributes: Array<string>, data_source: Record<string,any>) {
