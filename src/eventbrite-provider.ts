@@ -16,10 +16,6 @@ function EventbriteProvider(this: any, options: any) {
 
   let eventbrite: Sdk
 
-  seneca
-    .message('role:entity,cmd:load,zone:provider,base:eventbrite,name:event', loadEvent)
-    .message('role:entity,cmd:save,zone:provider,base:eventbrite,name:event', saveEvent)
-
   function add_actions() {
     Object.keys(ent_map).forEach((ent_name) => {
       const commands = ent_map[ent_name].commands
@@ -89,48 +85,6 @@ function EventbriteProvider(this: any, options: any) {
 
     add_actions()
   })
-
-
-  async function loadEvent(this: any, msg: any) {
-    const q: any = msg.q
-    const eventID: string = q.id
-
-    try {
-      const event: any = await eventbrite.request(`/events/${eventID}`)
-      const ent = this.make$('provider/eventbrite/event').data$(event)
-      return ent
-    }
-    catch (e: any) {
-      // TODO: better error description
-      throw new Error('Eventbrite Error: ' + JSON.stringify(e.parsedError))
-    }
-  }
-
-
-  async function saveEvent(this: any, msg: any) {
-    const ent: any = msg.ent
-    const eventID: string = ent.id
-
-    const body = JSON.stringify({
-      event: {
-        description: {
-          html: ent.summary,
-        },
-      },
-    })
-
-    // Missing a slash at the end of the URL cause the Fetch API to not handle POST requests correctly.
-    const event: any = await eventbrite.request(`/events/${eventID}/`, {
-      method: 'POST',
-      body,
-    })
-
-    const out = this.make$('provider/eventbrite/event').data$(event)
-
-    console.log('SAVE', out)
-
-    return out
-  }
 }
 
 
