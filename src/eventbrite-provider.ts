@@ -30,7 +30,9 @@ function EventbriteProvider(this: any, options: any) {
           ...common,
         }
 
-        const initialized_req_handler = init_handler(command_details.path)
+        let path = validate_path(command_details.path)
+
+        const initialized_req_handler = init_handler(path)
 
         const cmd_handler = cmd_handlers(
           initialized_req_handler,
@@ -42,6 +44,23 @@ function EventbriteProvider(this: any, options: any) {
         seneca.message(pattern, cmd_handler)
       })
     })
+  }
+
+  function validate_path(path: string) {
+    if(!path) {
+      throw new Error('path param is required')
+    }
+
+    const slash_at_beginning = /^(\/)/
+    const slash_at_end = /(\/)$/
+
+    const beg = slash_at_beginning.test(path)
+    const end = slash_at_end.test(path) 
+
+    if(!beg) path = '/' + path
+    if(!end) path = path + '/'
+
+    return path
   }
 
   function init_handler(path: string) {
