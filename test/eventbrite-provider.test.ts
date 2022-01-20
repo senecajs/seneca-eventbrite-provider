@@ -4,7 +4,6 @@
 // https://www.eventbrite.com/manage/events/230866526997/details
 
 import * as Fs from 'fs'
-import crypto from 'crypto'
 import { entities as entities_map } from "../src/entities"
 import EventbriteProvider from '../src/eventbrite-provider'
 import { set_mock_worker } from './set-mock-worker'
