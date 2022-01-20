@@ -167,13 +167,13 @@ const entities: any = {
         cmd: "load",
         method: "get",
         path: "/events/:event_id/inventory_tiers/:inventory_tier",
-        include: ['inventory_tier'],
+        include: ['inventory_tier', 'event_id'],
       },
       {
         cmd: "save",
         method: "post",
         path: "/events/:event_id/inventory_tiers/:inventory_tier/",
-        include: ['inventory_tier'],
+        include: ['inventory_tier', 'event_id'],
         body_args: {
           inventory_tier: {
             name: ':ent.name',
