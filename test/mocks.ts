@@ -3,13 +3,13 @@ const mocks = {
     get: {
       url: "/events/:event_id/",
       mock_data: {
-        id: "251037679457",
+        id: "238083523227",
       },
     },
     post: {
       url: "/events/:event_id/",
       mock_data: {
-        id: "251037679457",
+        id: "238083523227",
       },
     },
   },
@@ -32,14 +32,12 @@ const mocks = {
       url: "/events/:event_id/inventory_tiers/:inventory_tier/",
       mock_data: {
         id: "11195969",
-        event_id: "238083523227",
       },
     },
     post: {
       url: "/events/:event_id/inventory_tiers/:inventory_tier/",
       mock_data: {
         id: "11195969",
-        event_id: "238083523227",
       },
     },
   },
@@ -51,6 +49,22 @@ const mocks = {
       },
     },
   },
+  event_team: {
+    get: {
+      url: "/events/:event_id/teams/:team_id",
+      mock_data: {
+        id: "11195969",
+      },
+    },
+  },
+  attendee: {
+    get: {
+      url: "/events/:event_id/attendees/:attendee_id/",
+      mock_data: {
+        id: "1234",
+      },
+    },
+  }
 }
 
 export { mocks }
