@@ -72,21 +72,21 @@ function EventbriteProvider(this: any, options: any) {
   }
 
   function build_path(path: string, args: Record<string,any>) {
-    //match parameters after colon (:) in the path entity path
+    //match placeholders between colon (:) and slash (/) in the url path of a entity
     const matches_obj = path.matchAll(new RegExp(/:(.[^\/]+)/g))
     const matches_arr = [...matches_obj]
 
     matches_arr.forEach((match) => {
-      const url_placeholder = match[0]
-      const url_placeholder_name = match[1]
+      const placeholder = match[0]
+      const placeholder_name = match[1]
 
-      if (!args[url_placeholder_name]) {
+      if (!args[placeholder_name]) {
         throw new Error(
-          "Missing argument for the placeholder " + url_placeholder
+          "Missing argument for the placeholder " + placeholder
         )
       }
 
-      path = path.replace(url_placeholder, args[url_placeholder_name])
+      path = path.replace(placeholder, args[placeholder_name])
     })
 
     return path
