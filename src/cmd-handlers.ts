@@ -79,8 +79,8 @@ function cmd_handlers(initialized_req_handler: CallableFunction, body_specs: Rec
 
       const data_source_name = data_source[0].replace(':', '')
 
-      if(!data_source_name) {
-        throw new Error('Unknown data_source ' + data_source_name)
+      if(!data_sources[data_source_name]) {
+        throw new Error(`Unknown data_source :${data_source_name} in "${body_arg_key}" request body attribute`)
       }
 
       const from = data_sources[data_source_name]
