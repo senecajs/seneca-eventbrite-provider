@@ -73,12 +73,15 @@ function EventbriteProvider(this: any, options: any) {
 
   function build_path(path: string, args: Record<string,any>) {
     //match placeholders between colon (:) and slash (/) in the url path of a entity
-    const matches_obj = path.matchAll(new RegExp(/:(.[^\/]+)/g))
-    const matches_arr = [...matches_obj]
+    const matches = path.match(new RegExp(/:(.[^\/]+)/g))
 
-    matches_arr.forEach((match) => {
-      const placeholder = match[0]
-      const placeholder_name = match[1]
+    if(!matches) {
+      return path
+    }
+
+    matches.forEach((match) => {
+      const placeholder = match
+      const placeholder_name = match.replace(':', '')
 
       if (!args[placeholder_name]) {
         throw new Error(
