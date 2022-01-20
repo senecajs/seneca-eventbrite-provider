@@ -25,6 +25,7 @@ const entities: any = {
         path: "/events/:event_id/",
         include: ['event_id'],
         body_args: {
+          event: {
             name: {
               html: ':ent.name.html',
             },
@@ -53,6 +54,7 @@ const entities: any = {
             show_pick_a_seat: ':ent.show_pick_a_seat',
             show_seatmap_thumbnail: ':ent.show_seatmap_thumbnail',
             show_colors_in_seatmap_thumbnail:':ent.show_colors_in_seatmap_thumbnail',
+          }
         }
       }
     ],
