@@ -5,6 +5,9 @@ const test_args = {
   inventory_tier: '11195969',
   discount_id: '609282579',
   category_id: '101',
+  team_id: '1234',
+  attendee_id: '1234',
+  organization_id: '39198188963 ',
 }
 
 const rand = crypto.randomBytes(10).toString('hex')
@@ -219,6 +222,66 @@ const entities: any = {
       },
     },
   },
+  event_team: {
+    fields: [],
+    commands: [
+      {
+        cmd: "load",
+        method: "get",
+        path: "/events/:event_id/teams/:team_id",
+        include: ['event_id', 'team_id'],
+      },
+    ],
+    tests: {
+      load: {
+        args: {
+          event_id: test_args.event_id,
+          team_id: test_args.team_id,
+        },
+        expectations: {
+          id: {
+            sameAs: test_args.inventory_tier,
+          },
+          event_id: {
+            sameAs: test_args.event_id,
+          },
+          team_id: {
+            sameAs: test_args.team_id,
+          },
+        },
+      },
+    }
+  },
+  attendee: {
+    fields: [],
+    commands: [
+      {
+        cmd: "load",
+        method: "get",
+        path: "/events/:event_id/attendees/:attendee_id/",
+        include: ['event_id', 'attendee_id'],
+      },
+    ],
+    tests: {
+      load: {
+        args: {
+          event_id: test_args.event_id,
+          attendee_id: test_args.attendee_id,
+        },
+        expectations: {
+          id: {
+            sameAs: test_args.attendee_id,
+          },
+          attendee_id: {
+            sameAs: test_args.attendee_id,
+          },
+          event_id: {
+            sameAs: test_args.event_id,
+          },
+        },
+      },
+    }
+  }
 }
 
 export { entities }
