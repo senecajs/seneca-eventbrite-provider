@@ -2,6 +2,9 @@
 
 import Eventbrite from 'eventbrite'
 import { Sdk } from 'eventbrite/lib/types'
+import { entities } from './entities'
+import { make_request } from './make-request'
+import { ActionData, EntityMap } from './types'
 
 type EventbriteProviderOptions = {}
 
