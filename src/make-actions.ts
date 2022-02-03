@@ -21,7 +21,7 @@ function make_actions(action_data: ActionData) {
   function build_path(path: string, args: Record<string, any>) {
     const placeholders = path
       .split("/")
-      .filter(p => p.match(":(.[^/]*)"))
+      .filter(p => p.match(":(.[^/]*)")) // matches against sentences like :foo
   
     placeholders.forEach(p => {
       const param_name = p.split(":")[1]
