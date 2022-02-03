@@ -53,25 +53,6 @@ describe('eventbrite-provider', () => {
     await seneca.ready()
   })
 
-  test('entity-load', async () => {
-    if (CONFIG.key) {
-      const seneca = Seneca({ legacy: false })
-        .test()
-        .use('promisify')
-        .use('entity')
-        .use('provider', providerOptions)
-        .use(EventbriteProvider)
-
-      const event = await seneca.entity('provider/eventbrite/event').load$('214728557897')
-
-      expect(event).toBeDefined()
-      expect(event.id).toEqual('214728557897')
-      expect(event).toHaveProperty('name')
-      expect(event).toHaveProperty('description')
-      expect(event.entity$).toEqual('provider/eventbrite/event')
-    }
-  })
-
   test('entity-save', async () => {
     if (CONFIG.key) {
       const seneca = Seneca({ legacy: false })

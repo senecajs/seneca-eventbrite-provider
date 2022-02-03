@@ -14,7 +14,6 @@ function EventbriteProvider(this: any, options: any) {
   let eventbrite: Sdk
 
   seneca
-    .message('role:entity,cmd:load,zone:provider,base:eventbrite,name:event', loadEvent)
     .message('role:entity,cmd:save,zone:provider,base:eventbrite,name:event', saveEvent)
 
 
@@ -28,23 +27,6 @@ function EventbriteProvider(this: any, options: any) {
       this.fail('api-key-missing')
     }
   })
-
-
-  async function loadEvent(this: any, msg: any) {
-    const q: any = msg.q
-    const eventID: string = q.id
-
-    try {
-      const event: any = await eventbrite.request(`/events/${eventID}`)
-      const ent = this.make$('provider/eventbrite/event').data$(event)
-      return ent
-    }
-    catch (e: any) {
-      // TODO: better error description
-      throw new Error('Eventbrite Error: ' + JSON.stringify(e.parsedError))
-    }
-  }
-
 
   async function saveEvent(this: any, msg: any) {
     const ent: any = msg.ent
