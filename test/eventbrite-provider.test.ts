@@ -7,6 +7,7 @@ import * as Fs from 'fs'
 import crypto from 'crypto'
 
 import EventbriteProvider from '../src/eventbrite-provider'
+import { entities } from '../src/entities'
 
 const Seneca = require('seneca')
 const SenecaMsgTest = require('seneca-msg-test')
@@ -70,6 +71,26 @@ describe('eventbrite-provider', () => {
       })
       .use(EventbriteProvider)
     await (SenecaMsgTest(seneca, EventbriteProviderMessages)())
+  })
+
+  describe('entities-load', () => {
+    for(const [ent_name, ent_data] of Object.entries(entities)) {
+      test('load' + ent_name, async () => {
+        const seneca = Seneca({ legacy: false })
+        .test()
+        .use('promisify')
+        .use('entity')
+        .use('provider', providerOptions)
+        .use(EventbriteProvider)
+  
+        const ent = await seneca.entity('provider/eventbrite/' + ent_name).load$({
+          event_id: 238083523227
+        })
+
+        expect(ent.entity$).toBe("provider/eventbrite/" + ent_name)
+        expect(ent).toBeDefined()
+      })
+    }
   })
 
 })
