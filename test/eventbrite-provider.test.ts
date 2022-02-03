@@ -4,7 +4,6 @@
 // https://www.eventbrite.com/manage/events/230866526997/details
 
 import * as Fs from 'fs'
-import crypto from 'crypto'
 
 import EventbriteProvider from '../src/eventbrite-provider'
 import { entities } from '../src/entities'
