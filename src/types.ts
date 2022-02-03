@@ -7,7 +7,7 @@ type Actions = "load" | "save"
 type ReqDetails = {
   method: string
   path: string
-  body_spec: Record<string,any>
+  body_spec?: Record<string,any>
 }
 
 type Task = {
