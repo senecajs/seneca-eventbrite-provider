@@ -11,6 +11,19 @@ function make_actions(action_data: ActionData) {
 
   }
 
+  function build_path(path: string, args: Record<string, any>) {
+    const placeholders = path
+      .split("/")
+      .filter(p => p.match(":(.[^/]*)"))
+  
+    placeholders.forEach(p => {
+      const param_name = p.split(":")[1]
+      path = path.replace(p, args[param_name] ?? p)
+    })
+  
+    return path
+  }
+
   return {
     load,
     save
