@@ -3,7 +3,7 @@
 import Eventbrite from 'eventbrite'
 import { Sdk } from 'eventbrite/lib/types'
 import { entities } from './entities'
-import { make_actions } from './handlers'
+import { make_actions } from './make-actions'
 import { make_request } from './make-request'
 import { ActionData, EntityMap } from './types'
 
