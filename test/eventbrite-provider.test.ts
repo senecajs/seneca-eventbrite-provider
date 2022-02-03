@@ -53,29 +53,6 @@ describe('eventbrite-provider', () => {
     await seneca.ready()
   })
 
-  test('entity-save', async () => {
-    if (CONFIG.key) {
-      const seneca = Seneca({ legacy: false })
-        .test()
-        .use('promisify')
-        .use('entity')
-        .use('provider', providerOptions)
-        .use(EventbriteProvider)
-
-      // let event = await seneca.entity('provider/eventbrite/event').load$('228153231457')
-      let event = await seneca.entity('provider/eventbrite/event').load$('230866526997')
-
-      const randomBytes = crypto.randomBytes(12).toString('hex')
-
-      event.summary = randomBytes
-      event = await event.save$();
-
-      expect(event.summary).toEqual(randomBytes)
-      expect(event.entity$).toEqual('provider/eventbrite/event')
-
-    }
-  })
-
   test('messages', async () => {
     const seneca = Seneca({ legacy: false })
       .test()
