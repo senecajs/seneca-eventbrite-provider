@@ -74,6 +74,9 @@ describe('eventbrite-provider', () => {
   })
 
   describe('entities-load', () => {
+    if(!CONFIG.key) {
+      return
+    }
     for(const [ent_name, ent_data] of Object.entries(entities)) {
       test('load' + ent_name, async () => {
         const seneca = Seneca({ legacy: false })
