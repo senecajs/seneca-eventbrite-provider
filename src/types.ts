@@ -41,9 +41,13 @@ type EntDetails = {
   }
 }
 
+type TasksTypesFn = {
+  set: (task: Task, context: Context) => void
+}
+
 interface ActionData extends ActionDetails {
   pattern: Record<string,string>
   req_fn: (path:string, options?: Record<any,string>) => Promise<any>
 }
 
-export type { EntityMap, EntDetails, ActionData }
+export type { EntityMap, EntDetails, ActionData, Task, Context, TasksTypesFn }
