@@ -8,7 +8,9 @@ const entities: EntityMap = {
           method: "get",
           path: "/events/:event_id/",
         },
-        before: []
+        before: [
+          { on:'query', field: 'attribute', set: { query: 'event_id' } }
+        ]
       }
     },    
   }
