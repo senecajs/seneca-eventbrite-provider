@@ -2,6 +2,10 @@
 
 import Eventbrite from 'eventbrite'
 import { Sdk } from 'eventbrite/lib/types'
+import { entities } from './entities'
+import { make_actions } from './make-actions'
+import { make_request } from './make-request'
+import { ActionData, EntityMap } from './types'
 
 type EventbriteProviderOptions = {}
 
@@ -13,10 +17,67 @@ function EventbriteProvider(this: any, options: any) {
 
   let eventbrite: Sdk
 
-  seneca
-    .message('role:entity,cmd:load,zone:provider,base:eventbrite,name:event', loadEvent)
-    .message('role:entity,cmd:save,zone:provider,base:eventbrite,name:event', saveEvent)
+  add_actions()
 
+  function add_actions() {
+    const actions = prepare_actions(entities)
+
+    for (const action of actions) {
+      switch (action.pattern.cmd) {
+        case 'load':
+          seneca.message(action.pattern, make_load(action))
+          break
+      
+        case 'save':
+          seneca.message(action.pattern, make_save(action))
+          break
+      }
+    }
+
+  }
+
+  function make_load(action: ActionData) {
+    return make_actions(action)['load']
+  }
+
+  function make_save(action: ActionData) {
+    return make_actions(action)['save']
+  }
+
+
+  // prepare links replacing placeholders
+  function prepare_actions(entities: EntityMap): ActionData[] {
+    const actions_details: ActionData[] = []
+
+    for(const [ent_name, ent_details] of Object.entries(entities)) {
+      ent_details.name = ent_name
+
+      for(const [action_name, action_data] of Object.entries(ent_details.actions)) {
+
+        const pattern = {
+          name: ent_name,
+          cmd: action_name,
+          zone: 'provider',
+          base: 'eventbrite',
+          role: 'entity',
+        }
+
+        actions_details.push({
+          pattern,
+          req_fn: prepare_req_fn(action_data.request.method),
+          ...action_data
+        })
+      }
+
+    }
+    return actions_details
+  }
+
+  function prepare_req_fn(method: string) {
+    return (path: string, options?: Record<string, any>) => {
+      return make_request(eventbrite.request, path, method, options)
+    }
+  } 
 
   seneca.prepare(async function(this: any) {
     let out = await this.post('sys:provider,get:key,provider:eventbrite,key:api')
@@ -28,48 +89,6 @@ function EventbriteProvider(this: any, options: any) {
       this.fail('api-key-missing')
     }
   })
-
-
-  async function loadEvent(this: any, msg: any) {
-    const q: any = msg.q
-    const eventID: string = q.id
-
-    try {
-      const event: any = await eventbrite.request(`/events/${eventID}`)
-      const ent = this.make$('provider/eventbrite/event').data$(event)
-      return ent
-    }
-    catch (e: any) {
-      // TODO: better error description
-      throw new Error('Eventbrite Error: ' + JSON.stringify(e.parsedError))
-    }
-  }
-
-
-  async function saveEvent(this: any, msg: any) {
-    const ent: any = msg.ent
-    const eventID: string = ent.id
-
-    const body = JSON.stringify({
-      event: {
-        description: {
-          html: ent.summary,
-        },
-      },
-    })
-
-    // Missing a slash at the end of the URL cause the Fetch API to not handle POST requests correctly.
-    const event: any = await eventbrite.request(`/events/${eventID}/`, {
-      method: 'POST',
-      body,
-    })
-
-    const out = this.make$('provider/eventbrite/event').data$(event)
-
-    console.log('SAVE', out)
-
-    return out
-  }
 }
 
 

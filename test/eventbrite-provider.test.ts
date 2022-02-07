@@ -7,6 +7,9 @@ import * as Fs from 'fs'
 import crypto from 'crypto'
 
 import EventbriteProvider from '../src/eventbrite-provider'
+import { entities } from '../src/entities'
+import { perform_tasks } from '../src/utils'
+import { Context, Task } from '../src/types'
 
 const Seneca = require('seneca')
 const SenecaMsgTest = require('seneca-msg-test')
@@ -53,48 +56,6 @@ describe('eventbrite-provider', () => {
     await seneca.ready()
   })
 
-  test('entity-load', async () => {
-    if (CONFIG.key) {
-      const seneca = Seneca({ legacy: false })
-        .test()
-        .use('promisify')
-        .use('entity')
-        .use('provider', providerOptions)
-        .use(EventbriteProvider)
-
-      const event = await seneca.entity('provider/eventbrite/event').load$('214728557897')
-
-      expect(event).toBeDefined()
-      expect(event.id).toEqual('214728557897')
-      expect(event).toHaveProperty('name')
-      expect(event).toHaveProperty('description')
-      expect(event.entity$).toEqual('provider/eventbrite/event')
-    }
-  })
-
-  test('entity-save', async () => {
-    if (CONFIG.key) {
-      const seneca = Seneca({ legacy: false })
-        .test()
-        .use('promisify')
-        .use('entity')
-        .use('provider', providerOptions)
-        .use(EventbriteProvider)
-
-      // let event = await seneca.entity('provider/eventbrite/event').load$('228153231457')
-      let event = await seneca.entity('provider/eventbrite/event').load$('230866526997')
-
-      const randomBytes = crypto.randomBytes(12).toString('hex')
-
-      event.summary = randomBytes
-      event = await event.save$();
-
-      expect(event.summary).toEqual(randomBytes)
-      expect(event.entity$).toEqual('provider/eventbrite/event')
-
-    }
-  })
-
   test('messages', async () => {
     const seneca = Seneca({ legacy: false })
       .test()
@@ -112,6 +73,105 @@ describe('eventbrite-provider', () => {
       })
       .use(EventbriteProvider)
     await (SenecaMsgTest(seneca, EventbriteProviderMessages)())
+  })
+
+  describe('entities-load', () => {
+    if(!CONFIG.key) {
+      return
+    }
+    for(const [ent_name, ent_data] of Object.entries(entities)) {
+      test('load' + ent_name, async () => {
+        const seneca = Seneca({ legacy: false })
+        .test()
+        .use('promisify')
+        .use('entity')
+        .use('provider', providerOptions)
+        .use(EventbriteProvider)
+  
+        const ent = await seneca.entity('provider/eventbrite/' + ent_name).load$({
+          event_id: 238083523227
+        })
+
+        expect(ent.entity$).toBe("provider/eventbrite/" + ent_name)
+        expect(ent).toBeDefined()
+      })
+    }
+  })
+
+  describe('set', () => {
+    test('can-set-attribute-to-target', () => {
+      const tasks: Task[] = [
+        { on: 'outent', field: 'full_name', set: { query: 'name' } },
+        { on: 'req', field: 'number', set: { inent: 'attr_number' } },
+        { on: 'query', field: 'foo', set: { res: 'bar' } },
+      ]
+  
+      const context: Context = {
+        query: {
+          name: crypto.randomBytes(10).toString('hex'),
+          foo: 'foo'
+        },
+        outent: {},
+        inent: {
+          attr_number: 5
+        },
+        req: {
+          number: 2
+        },
+        res: {
+          bar: 'bar'
+        }
+      }
+  
+      perform_tasks(tasks, context)
+  
+      expect(context.outent).toHaveProperty('full_name')
+      expect(context.outent.full_name).toBe(context.query.name)
+  
+      expect(context.req).toHaveProperty('number')
+      expect(context.req.number).toBe(context.inent.attr_number)
+      
+      expect(context.query).toHaveProperty('foo')
+      expect(context.query.foo).toBe(context.res.bar)
+    })
+  
+    test('throws-error-for-invalid-task', () => {
+      const tasks = [
+        { on: 'outent', field: 'full_name', foo: { query: 'name' } },
+      ]
+  
+      const context: Context = {
+        query: {
+          name: crypto.randomBytes(10).toString('hex'),
+        },
+        outent: {},
+      }
+  
+      try {
+        perform_tasks(tasks as Task[], context);
+      } catch (e) {
+        expect(e.message).toBe("unable to find task of type foo");
+      }    
+    })
+  
+    test('throws-error-for-a-missing-source-obj', () => {
+      const tasks = [
+        { on: 'outent', field: 'full_name', set: {} },
+      ]
+  
+      const context: Context = {
+        query: {
+          name: crypto.randomBytes(10).toString('hex'),
+        },
+        outent: {},
+      }
+  
+      try {
+        perform_tasks(tasks as Task[], context);
+      } catch (e) {
+        expect(e.message).toBe("A source object is required when setting a target");
+      }    
+    })
   })
 
 })
