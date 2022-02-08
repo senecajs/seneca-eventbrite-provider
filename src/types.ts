@@ -13,9 +13,13 @@ type ReqDetails = {
 type Task = {
   on: keyof Context
 }
+
 interface SetTask extends Task {
   field: string
   set: {[key in keyof Context]: string}
+}
+interface DelTask extends Task {
+  del: string
 }
 
 type Context = {
@@ -41,6 +45,7 @@ type EntDetails = {
 
 type TasksTypesFn = {
   set: (task: SetTask, context: Context) => void
+  del: (task: DelTask, context: Context) => void
 }
 
 interface ActionData extends ActionDetails {
@@ -48,4 +53,4 @@ interface ActionData extends ActionDetails {
   req_fn: (path:string, options?: Record<any,string>) => Promise<any>
 }
 
-export type { EntityMap, EntDetails, ActionData, Task, Context, TasksTypesFn, SetTask }
+export type { EntityMap, EntDetails, ActionData, Task, Context, TasksTypesFn, SetTask, DelTask }
