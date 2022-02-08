@@ -7,7 +7,6 @@ import * as Fs from 'fs'
 import crypto from 'crypto'
 
 import EventbriteProvider from '../src/eventbrite-provider'
-import { entities } from '../src/entities'
 import { perform_tasks } from '../src/utils'
 import { Context, Task } from '../src/types'
 import { ents_tests } from './ents-tests'
