@@ -10,6 +10,8 @@ import EventbriteProvider from '../src/eventbrite-provider'
 import { perform_tasks } from '../src/utils'
 import { Context, Task } from '../src/types'
 import { ents_tests } from './ents-tests'
+import { set_mock_worker } from './set-mock-worker'
+import { mocks } from './mocks'
 
 const Seneca = require('seneca')
 const SenecaMsgTest = require('seneca-msg-test')
@@ -23,6 +25,11 @@ if (Fs.existsSync(__dirname + '/local-config.js')) {
 
 jest.setTimeout(10000)
 
+// Configure mock service worker
+const worker = set_mock_worker(mocks)
+
+beforeAll(() => worker.listen())
+afterAll(() => worker.close())
 
 // Separate entities details by their command type
 const loads = {}
