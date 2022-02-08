@@ -1,28 +1,24 @@
-import { Context, Task, TasksTypesFn } from "./types"
+import { Context, SetTask, Task, TasksTypesFn } from "./types"
 
 function perform_tasks(tasks: Task[], context: Context ) {
   tasks.forEach(task => {
-    const [_, __, ...types] = Object.keys(task)
+    const { on, ...tasks } = task
 
-    types.forEach(type => {
+    Object.keys(tasks).forEach(type => {
       const typeFn = tasksTypes[type as keyof TasksTypesFn]
 
       if(!typeFn) {
         throw new Error('unable to find task of type ' + type)
       }
 
-      typeFn(task, context)
+      typeFn(task as DelTask & SetTask, context)
     })
   })
 
   return context
 }
 
-function set(task: Task, context: Context) {
-  if(!task.set) {
-    return
-  }
-
+function set(task: SetTask, context: Context) {
   const source_name = Object.keys(task.set)[0]
 
   if(!source_name) {
@@ -39,7 +35,7 @@ function set(task: Task, context: Context) {
 }
 
 const tasksTypes: TasksTypesFn = {
-  set
+  set,
 }
 
 export { perform_tasks };
