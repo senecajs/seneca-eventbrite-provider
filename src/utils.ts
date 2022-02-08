@@ -1,4 +1,5 @@
-import { Context, SetTask, Task, TasksTypesFn } from "./types"
+import { Context, DelTask, SetTask, Task, TasksTypesFn } from "./types"
+import * as _ from 'lodash'
 
 function perform_tasks(tasks: Task[], context: Context ) {
   tasks.forEach(task => {
@@ -34,8 +35,16 @@ function set(task: SetTask, context: Context) {
   target[target_field] = source[source_field]
 }
 
+function del(task: DelTask, context: Context) {
+  let target  = context[task.on]
+  const field = task.del
+
+  context[task.on] = _.omit(target, [field])
+}
+
 const tasksTypes: TasksTypesFn = {
   set,
+  del
 }
 
 export { perform_tasks };
