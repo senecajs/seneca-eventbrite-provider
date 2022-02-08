@@ -3,17 +3,17 @@ import * as _ from 'lodash'
 
 function perform_tasks(tasks: Task[], context: Context ) {
   tasks.forEach(task => {
-    const { on, ...tasks } = task
+    const tasks = _.omit(task ,['on', 'field'])
 
-    Object.keys(tasks).forEach(type => {
-      const typeFn = tasksTypes[type as keyof TasksTypesFn]
-
-      if(!typeFn) {
+    for(const [type, data] of Object.entries(tasks)) {
+      const taskFn = tasksTypes[type as keyof TasksTypesFn]
+  
+      if(!taskFn) {
         throw new Error('unable to find task of type ' + type)
       }
-
-      typeFn(task as DelTask & SetTask, context)
-    })
+  
+      taskFn(task as DelTask & SetTask, context)
+    }
   })
 
   return context
