@@ -10,6 +10,8 @@ type ReqDetails = {
   body?: Record<string, Array<string>>
 }
 
+type TasksTypes = SetTask | DelTask
+
 type Task = {
   on: keyof Context
 }
@@ -32,8 +34,8 @@ type Context = {
 
 type ActionDetails = {
   request: ReqDetails
-  after?: Task[]
-  before?: Task[]
+  after?: TasksTypes[]
+  before?: TasksTypes[]
 }
 
 type EntDetails = {
