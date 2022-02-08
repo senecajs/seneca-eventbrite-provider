@@ -10,6 +10,7 @@ import EventbriteProvider from '../src/eventbrite-provider'
 import { entities } from '../src/entities'
 import { perform_tasks } from '../src/utils'
 import { Context, Task } from '../src/types'
+import { ents_tests } from './ents-tests'
 
 const Seneca = require('seneca')
 const SenecaMsgTest = require('seneca-msg-test')
@@ -22,6 +23,24 @@ if (Fs.existsSync(__dirname + '/local-config.js')) {
 }
 
 jest.setTimeout(10000)
+
+
+// Separate entities details by their command type
+const loads = {}
+const saves = {}
+
+Object.keys(ents_tests).forEach(ent_name => {
+  const actions = ents_tests[ent_name]
+  
+  Object.keys(actions).forEach(action_name => {
+    if(action_name === 'load') {
+      loads[ent_name] = actions
+    }
+    if(action_name === 'save') {
+      saves[ent_name] = actions
+    }
+  })
+})
 
 describe('eventbrite-provider', () => {
 
@@ -75,27 +94,33 @@ describe('eventbrite-provider', () => {
     await (SenecaMsgTest(seneca, EventbriteProviderMessages)())
   })
 
-  describe('entities-load', () => {
-    if(!CONFIG.key) {
-      return
-    }
-    for(const [ent_name, ent_data] of Object.entries(entities)) {
-      test('load' + ent_name, async () => {
-        const seneca = Seneca({ legacy: false })
-        .test()
-        .use('promisify')
-        .use('entity')
-        .use('provider', providerOptions)
-        .use(EventbriteProvider)
+  describe("entities-load", () => {
+    Object.keys(loads).forEach(ent_name => {
+      let test_data = loads[ent_name]
   
-        const ent = await seneca.entity('provider/eventbrite/' + ent_name).load$({
-          event_id: 238083523227
-        })
+      test(`load-${ent_name}` , async () => {
+        const seneca = Seneca({ legacy: false })
+          .test()
+          .use("promisify")
+          .use("entity")
+          .use("provider", providerOptions)
+          .use(EventbriteProvider)
+  
+        const load_test_data = test_data.load
+        let res_data = await seneca.entity("provider/eventbrite/" + ent_name).load$(load_test_data.args)
+        console.log(ent_name,res_data)
+  
+        expect(res_data.entity$).toBe("provider/eventbrite/" + ent_name)
 
-        expect(ent.entity$).toBe("provider/eventbrite/" + ent_name)
-        expect(ent).toBeDefined()
+        const expectations = load_test_data.expectations
+  
+        if(expectations) {
+          assert(expectations, res_data)
+        } else {
+          expect(res_data.id).toBeDefined()
+        }
       })
-    }
+    })
   })
 
   describe('set', () => {
