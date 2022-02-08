@@ -122,6 +122,41 @@ describe('eventbrite-provider', () => {
     })
   })
 
+  describe("entities-save", () => {
+    Object.keys(saves).forEach(ent_name => {
+      let test_data = saves[ent_name]
+  
+      test(`save-${ent_name}` , async () => {
+        const seneca = Seneca({ legacy: false })
+          .test()
+          .use("promisify")
+          .use("entity")
+          .use("provider", providerOptions)
+          .use(EventbriteProvider)
+  
+        const load_test_data = loads[ent_name].load
+        const save_test_data = test_data.save
+  
+        let entity = await seneca.entity("provider/eventbrite/" + ent_name).load$(load_test_data.args)
+  
+        expect(entity.entity$).toBe("provider/eventbrite/" + ent_name)
+  
+        // Apply changes and save
+        const changes = save_test_data.changes
+        Object.keys(changes).forEach(change => {
+          entity[change] = changes[change]
+        })
+        entity = await entity.save$(save_test_data.args)
+  
+        // Assertions
+        const expectations = save_test_data.expectations
+        expectations
+          ? assert(expectations, entity)
+          : expect(entity.id).toBeDefined() // check for a ID when no expectations were set
+      })
+    })
+  })
+
   describe('set', () => {
     test('can-set-attribute-to-target', () => {
       const tasks: Task[] = [
@@ -197,6 +232,21 @@ describe('eventbrite-provider', () => {
       }    
     })
   })
+
+  function assert(expectations: any, against: any) {
+    for(const [field, field_assertions] of Object.entries(expectations)) {
+      for( const [assertion, data] of Object.entries(field_assertions)) {
+        switch (assertion) {
+          case 'sameAs':
+            expect(against[field]).toBe(data)
+            break
+          case 'toMatchObject':
+            expect(against[field]).toMatchObject(data)
+            break
+        }
+      }
+    }
+  }
 
 })
 
