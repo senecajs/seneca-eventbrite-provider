@@ -38,21 +38,21 @@ function make_actions(action_data: ActionData) {
     const { q, ent } = msg
     let body: Record<string, any> = {}
 
-    let context: Context = {
-      query: q,
-      inent: ent,
-    }
-
     const built_path = build_path(path, ent)
     
     if(action_data.details.request.body) {
       body = fill_body(action_data.details.request.body, ent)
     }
 
-    if(before) {
-      context = perform_tasks(before, {...context, req: body})
+    let context: Context = {
+      query: q,
+      inent: ent,
+      req: body
     }
 
+    if(before) {
+      context = perform_tasks(before, context)
+    }
 
     const res =  await req_fn(built_path, {
       body: JSON.stringify(context.req)
