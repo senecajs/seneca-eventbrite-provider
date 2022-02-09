@@ -8,7 +8,7 @@ import crypto from 'crypto'
 
 import EventbriteProvider from '../src/eventbrite-provider'
 import { perform_tasks } from '../src/utils'
-import { Context, Task } from '../src/types'
+import { Context, DelTask, SetTask, Task } from '../src/types'
 import { ents_tests } from './ents-tests'
 import { set_mock_worker } from './set-mock-worker'
 import { mocks } from './mocks'
@@ -164,9 +164,51 @@ describe('eventbrite-provider', () => {
     })
   })
 
+  describe('del', () => {
+    test('can-del-attribute-from-target', () => {
+      const tasks: DelTask[] = [
+        { on: 'outent', del: 'name' },
+        { on: 'req', del: 'attr_number' },
+        { on: 'query', del: 'name' },
+        { on: 'inent', del: 'attr' },
+        { on: 'res', del: 'bar' },
+      ]
+
+      const context: Context = {
+        query: {
+          name: crypto.randomBytes(10).toString('hex'),
+          bar: 'bar'
+        },
+        outent: {
+          name: 'baz'
+        },
+        inent: {
+          attr: 5
+        },
+        req: {
+          attr_number: 2
+        },
+        res: {
+          bar: 'bar'
+        }
+      }
+
+      perform_tasks(tasks, context)
+
+      expect(context.outent.name).toBeUndefined()
+      expect(context.req.attr_number).toBeUndefined()
+      expect(context.query.name).toBeUndefined()
+      expect(context.inent.attr).toBeUndefined()
+      expect(context.res.bar).toBeUndefined()
+
+      expect(context.query.bar).toBeDefined()
+
+    })
+  })
+
   describe('set', () => {
     test('can-set-attribute-to-target', () => {
-      const tasks: Task[] = [
+      const tasks: SetTask[] = [
         { on: 'outent', field: 'full_name', set: { query: 'name' } },
         { on: 'req', field: 'number', set: { inent: 'attr_number' } },
         { on: 'query', field: 'foo', set: { res: 'bar' } },
