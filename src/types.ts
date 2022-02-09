@@ -7,17 +7,21 @@ type Actions = "load" | "save"
 type ReqDetails = {
   method: string
   path: string
-  body_spec?: Record<string,any>
+  body?: Record<string, Array<string>>
 }
+
+type TasksTypes = SetTask | DelTask
 
 type Task = {
   on: keyof Context
-  field: string
-  set?: Set
 }
 
-type Set = {
-  [key in keyof Context]: string
+interface SetTask extends Task {
+  field: string
+  set: {[key in keyof Context]: string}
+}
+interface DelTask extends Task {
+  del: string
 }
 
 type Context = {
@@ -30,8 +34,8 @@ type Context = {
 
 type ActionDetails = {
   request: ReqDetails
-  after?: Task[]
-  before?: Task[]
+  after?: TasksTypes[]
+  before?: TasksTypes[]
 }
 
 type EntDetails = {
@@ -42,12 +46,18 @@ type EntDetails = {
 }
 
 type TasksTypesFn = {
-  set: (task: Task, context: Context) => void
+  set: (task: SetTask, context: Context) => void
+  del: (task: DelTask, context: Context) => void
 }
 
-interface ActionData extends ActionDetails {
+type ActionData = {
   pattern: Record<string,string>
+  details: ActionDetails
   req_fn: (path:string, options?: Record<any,string>) => Promise<any>
 }
 
-export type { EntityMap, EntDetails, ActionData, Task, Context, TasksTypesFn }
+type EntData = {
+  [key in Actions]: ActionData
+}
+
+export type { Actions, EntityMap, EntDetails, ActionData, Task, Context, TasksTypesFn, SetTask, DelTask, EntData }

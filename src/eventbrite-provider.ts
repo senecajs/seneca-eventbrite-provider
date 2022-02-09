@@ -5,7 +5,7 @@ import { Sdk } from 'eventbrite/lib/types'
 import { entities } from './entities'
 import { make_actions } from './make-actions'
 import { make_request } from './make-request'
-import { ActionData, EntityMap } from './types'
+import { EntData, EntityMap } from './types'
 
 type EventbriteProviderOptions = {}
 
@@ -20,57 +20,52 @@ function EventbriteProvider(this: any, options: any) {
   add_actions()
 
   function add_actions() {
-    const actions = prepare_actions(entities)
+    const ents = prepare_ents(entities)
 
-    for (const action of actions) {
-      switch (action.pattern.cmd) {
-        case 'load':
-          seneca.message(action.pattern, make_load(action))
-          break
-      
-        case 'save':
-          seneca.message(action.pattern, make_save(action))
-          break
-      }
+    for(const ent of ents) {
+      seneca.message(ent.load.pattern, (make_load(ent) || unknown_cmd))
+      seneca.message(ent.save.pattern, (make_save(ent) || unknown_cmd))
     }
-
   }
 
-  function make_load(action: ActionData) {
-    return make_actions(action)['load']
+  function make_load(ent: EntData) {
+    if(!ent.load.details) return false
+    return make_actions(ent.load).load
   }
 
-  function make_save(action: ActionData) {
-    return make_actions(action)['save']
+  function make_save(ent: EntData) {
+    if(!ent.save.details) return false
+    return make_actions(ent.save).save
   }
 
+  async function unknown_cmd(this: any, msg: any) {
+    throw new Error(`undefined action: ${msg.cmd}, entity: ${msg.ent.entity$}`)
+  }
 
   // prepare links replacing placeholders
-  function prepare_actions(entities: EntityMap): ActionData[] {
-    const actions_details: ActionData[] = []
+  function prepare_ents(entities: EntityMap): EntData[] {
+    const ents_datas: EntData[] = []
 
     for(const [ent_name, ent_details] of Object.entries(entities)) {
       ent_details.name = ent_name
+      const ent_data: any = { load : {}, save: {} }
 
-      for(const [action_name, action_data] of Object.entries(ent_details.actions)) {
+      const common = {zone:'provider', base:'eventbrite', role:'entity', name: ent_name}
 
-        const pattern = {
-          name: ent_name,
-          cmd: action_name,
-          zone: 'provider',
-          base: 'eventbrite',
-          role: 'entity',
-        }
+      ent_data.load.pattern = {...common, cmd: 'load'}
+      ent_data.save.pattern = {...common, cmd: 'save'}
 
-        actions_details.push({
-          pattern,
-          req_fn: prepare_req_fn(action_data.request.method),
-          ...action_data
+      for(const [action_name, details] of Object.entries(ent_details.actions)) {
+        Object.assign(ent_data[action_name], {
+          details,
+          req_fn: prepare_req_fn(details.request.method)
         })
       }
 
+      ents_datas.push(ent_data)
     }
-    return actions_details
+
+    return ents_datas
   }
 
   function prepare_req_fn(method: string) {
