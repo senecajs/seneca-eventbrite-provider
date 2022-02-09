@@ -50,9 +50,14 @@ type TasksTypesFn = {
   del: (task: DelTask, context: Context) => void
 }
 
-interface ActionData extends ActionDetails {
+type ActionData = {
   pattern: Record<string,string>
+  details: ActionDetails
   req_fn: (path:string, options?: Record<any,string>) => Promise<any>
 }
 
-export type { EntityMap, EntDetails, ActionData, Task, Context, TasksTypesFn, SetTask, DelTask }
+type EntData = {
+  [key in Actions]: ActionData
+}
+
+export type { Actions, EntityMap, EntDetails, ActionData, Task, Context, TasksTypesFn, SetTask, DelTask, EntData }
