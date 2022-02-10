@@ -8,6 +8,7 @@ const test_args = {
   team_id: '1234',
   attendee_id: '1234',
   organization_id: '39198188963 ',
+  format_id: '100',
 }
 
 const ents_tests: TestEntityMap = {
@@ -136,6 +137,43 @@ const ents_tests: TestEntityMap = {
         event_id: {
           sameAs: test_args.event_id,
         },
+      },
+    },
+  },
+  format: {
+    load: {
+      args: {
+        format_id: test_args.format_id,
+      },
+      expectations: {
+        id: {
+          sameAs: test_args.format_id,
+        },
+      },
+    },
+  },
+  display_settings: {
+    load: {
+      args: {
+        event_id: test_args.event_id,
+      },
+      expectations: {
+        event_id: {
+          sameAs: test_args.event_id,
+        },
+      },
+    },
+    save: {
+      changes: {
+        show_start_date: true,
+      },
+      expectations: {
+        event_id: {
+          sameAs: test_args.event_id,
+        },
+        show_start_date: {
+          sameAs: true
+        }
       },
     },
   }

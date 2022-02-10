@@ -42,21 +42,17 @@ const mocks = {
     get: {
       url: "/events/:event_id/inventory_tiers/:inventory_tier/",
       mock_data: {
-        inventory_tier: {
-          id: '11195969',
-          event_id: '238083523227',
-          name: '26ebbd125e7ccc13ee6f',
-        }
+        id: '11195969',
+        event_id: '238083523227',
+        name: '26ebbd125e7ccc13ee6f',
       }
     },
     post: {
       url: "/events/:event_id/inventory_tiers/:inventory_tier/",
       mock_data: {
-        inventory_tier: {
-          id: '11195969',
-          event_id: '238083523227',
-          name: '26ebbd125e7ccc13ee6f',
-        }
+        id: '11195969',
+        event_id: '238083523227',
+        name: '26ebbd125e7ccc13ee6f',
       }
     },
   },
@@ -77,6 +73,32 @@ const mocks = {
         event_id: "238083523227"
       },
     },
+  },
+  format: {
+    get: {
+      url: '/formats/:format_id/',
+      mock_data: {
+        id: "100",
+      },
+    },
+  },
+  display_settings: {
+    get: {
+      url: '/events/:event_id/display_settings/',
+      mock_data: {
+        event_id: "238083523227",
+        show_start_date: true,
+        resource_uri: 'https://www.eventbriteapi.com/v3/events/238083523227/display_settings/',
+      },
+    },
+    post: {
+      url: '/events/:event_id/display_settings/',
+      mock_data: {
+        event_id: "238083523227",
+        show_start_date: true,
+        resource_uri: 'https://www.eventbriteapi.com/v3/events/238083523227/display_settings/',
+      },
+    }
   }
 }
 

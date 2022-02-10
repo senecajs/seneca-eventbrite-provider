@@ -143,7 +143,53 @@ const entities: EntityMap = {
         }
       }
     }
-  }
+  },
+  format: {
+    actions: {
+      load: {
+        request: {
+          method: 'get',
+          path: '/formats/:format_id/'
+        },
+      }
+    }
+  },
+  display_settings: {
+    actions: {
+      load: {
+        request: {
+          method: 'get',
+          path: '/events/:event_id/display_settings/'
+        },
+        after: [
+          { on: 'outent', field: 'event_id', set: { query: 'event_id' } }
+        ]
+      },
+      save: {
+        request: {
+          method: 'post',
+          path: '/events/:event_id/display_settings/',
+          body: {
+            display_settings: [
+              'show_start_date',
+              'show_end_date',
+              'show_start_end_time',
+              'show_timezone',
+              'show_map',
+              'show_remaining',
+              'show_organizer_facebook',
+              'show_organizer_twitter',
+              'show_facebook_friends_going',
+              'terminology',
+            ]
+          }
+        },
+        after: [
+          { on: 'outent', field: 'event_id', set: { inent: 'event_id' } }
+        ]
+      }
+    }
+  }, 
 }
 
 export { entities }
