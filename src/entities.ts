@@ -274,7 +274,7 @@ const entities: EntityMap = {
       load: {
         request: {
           method: 'get',
-          path: '/organizations/:organization_id/text_overrides/?locale=:locale&venue_id=:venue_id&event_id=:event_id&text_codes=:text_codes',
+          path: '/organizations/:organization_id/text_overrides?locale=:locale&venue_id=:venue_id&event_id=:event_id&text_codes=:text_codes',
         },
       },
     },
@@ -329,7 +329,75 @@ const entities: EntityMap = {
         ]
       }
     },
-  }
+  },
+  ticket_group: {
+    actions: {
+      load: {
+        request: {
+          method: 'get',
+          path: '/ticket_groups/:ticket_group_id/',
+        },
+        after: [
+          { on: 'outent', field: 'ticket_group_id', set: { query: 'ticket_group_id' } }
+        ]
+      },
+      save: {
+        request: {
+          method: 'post',
+          path: '/ticket_groups/:ticket_group_id/',
+          body: {
+            ticket_group: [
+              'name',
+              'status',
+              'event_ticket_ids',
+            ]
+          }
+        },
+        after: [
+          { on: 'outent', field: 'ticket_class_id', set: { inent: 'ticket_class_id' } }
+        ]
+      }
+    },
+  },
+  venue: {
+    actions: {
+      load: {
+        request: {
+          method: 'get',
+          path: '/venues/:venue_id/',
+        },
+        after: [
+          { on: 'outent', field: 'venue_id', set: { query: 'venue_id' } }
+        ]
+      },
+      save: {
+        request: {
+          method: 'post',
+          path: '/venues/:venue_id/',
+          body: {
+            venue: [
+              'name',
+              'capacity',
+              'address',
+            ]
+          }
+        },
+        after: [
+          { on: 'outent', field: 'venue_id', set: { inent: 'venue_id' } }
+        ]
+      }
+    },
+  },
+  user: {
+    actions: {
+      load: {
+        request: {
+          method: 'get',
+          path: '/users/:user_id/',
+        },
+      },
+    },
+  },
 }
 
 export { entities }

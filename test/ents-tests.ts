@@ -11,6 +11,12 @@ const test_args = {
   format_id: '100',
   event_series_id: '100',
   order_id: '1234',
+  venue_id: '1234',
+  user_id: '123456',
+  ticket_group: {
+    ticket_group_id: '1234',
+    name: 'foo'
+  },
   ticket_class: {
     ticket_class_id: '1234',
     event_id: '238083523227',
@@ -353,7 +359,60 @@ const ents_tests: TestEntityMap = {
         }
       },
     }
-  }
+  },
+  ticket_group: {
+    load: {
+      args: {
+       ticket_group_id: test_args.ticket_group.ticket_group_id
+      },
+      expectations: {
+        name: {
+          sameAs: test_args.ticket_group.name
+        },
+      },
+    },
+    save: {
+      changes: {
+        name: 'foo'
+      },
+      expectations: {
+        name: {
+          sameAs: 'bar'
+        }
+      },
+    }
+  },
+  venue: {
+    load: {
+      args: {
+       venue_id: test_args.venue_id
+      },
+    },
+    save: {
+      changes: {
+        name: 'Foo'
+      },
+      expectations: {
+        name: {
+          sameAs: 'Bar'
+        }
+      },
+    }
+  },
+  user: {
+    load: {
+      args: {
+       user_id: test_args.user_id
+      },
+      expectations: {
+        user: {
+          toMatchObject: {
+            id: test_args.user_id,
+          }
+        },
+      },
+    }
+  },
 }
 
 export { ents_tests }

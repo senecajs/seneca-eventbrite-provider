@@ -195,6 +195,48 @@ const mocks = {
       }
     },
   },
+  ticket_group: {
+    get: {
+      url: "/ticket_groups/:ticket_group_id/",
+      mock_data: {
+        name: 'foo',
+        status: 'live',
+      } 
+    },
+    post: {
+      url: "/ticket_groups/:ticket_group_id/",
+      mock_data: {
+        name: 'bar',
+        status: 'live',
+      } 
+    },
+  },
+  vanue: {
+    get: {
+      url: "/venues/:venue_id/",
+      mock_data: {
+        id: '1234',
+        name: 'Foo'
+      } 
+    },
+    post: {
+      url: "/venues/:venue_id/",
+      mock_data: {
+        id: '1234',
+        name: 'Bar'
+      } 
+    },
+  },
+  user: {
+    get: {
+      url: "/users/:user_id/",
+      mock_data: {
+        user: {
+          id: '123456',
+        }
+      }
+    },
+  },
 }
 
 export { mocks }
