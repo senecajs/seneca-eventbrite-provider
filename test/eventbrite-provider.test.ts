@@ -114,7 +114,6 @@ describe('eventbrite-provider', () => {
   
         const load_test_data = test_data.load
         let res_data = await seneca.entity("provider/eventbrite/" + ent_name).load$(load_test_data.args)
-        console.log(ent_name,res_data)
   
         expect(res_data.entity$).toBe("provider/eventbrite/" + ent_name)
 
