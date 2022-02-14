@@ -1,42 +1,42 @@
-import { EntityMap } from "./types";
+import { EntityMap } from './types';
 
 const entities: EntityMap = {
   event: {
     actions: {
       load: {
         request: {
-          method: "get",
-          path: "/events/:event_id/",
+          method: 'get',
+          path: '/events/:event_id/',
         },
         after: [
-          { on: 'outent', field: 'event_id', set: { query: 'event_id' } }
-        ]
+          { on: 'outent', field: 'event_id', set: { query: 'event_id' } },
+        ],
       },
       save: {
         request: {
-          method: "post",
-          path: "/events/:event_id/",
+          method: 'post',
+          path: '/events/:event_id/',
           body: {
             event: [
               'name',
-              'description', 
-              'start', 
-              'end', 
+              'description',
+              'start',
+              'end',
               'currency',
               'online_event',
               'organizer_id',
               'listed',
-              'shareable', 
-              'invite_only', 
+              'shareable',
+              'invite_only',
               'show_remaining',
               'password',
               'capacity',
               'is_reserved_seating',
-              'is_series', 
+              'is_series',
               'show_pick_a_seat',
               'show_seatmap_thumbnail',
               'show_colors_in_seatmap_thumbnail',
-            ]
+            ],
           },
         },
         before: [
@@ -44,35 +44,35 @@ const entities: EntityMap = {
           { on: 'req', del: 'event.end.local' },
           { on: 'req', del: 'event.name.text' },
           { on: 'req', del: 'event.description.text' },
-        ]
-      }
+        ],
+      },
     },
   },
   category: {
     actions: {
       load: {
         request: {
-          method: "get",
-          path: "/categories/:category_id/",
+          method: 'get',
+          path: '/categories/:category_id/',
         },
       },
-    }
+    },
   },
   discount: {
     actions: {
       load: {
         request: {
-          method: "get",
-          path: "/discounts/:discount_id/",
+          method: 'get',
+          path: '/discounts/:discount_id/',
         },
         after: [
-          { on: 'outent', field: 'discount_id', set: { query: 'discount_id' } }
-        ]
+          { on: 'outent', field: 'discount_id', set: { query: 'discount_id' } },
+        ],
       },
       save: {
         request: {
-          method: "post",
-          path: "/discounts/:discount_id",
+          method: 'post',
+          path: '/discounts/:discount_id',
           body: {
             discount: [
               'type',
@@ -88,13 +88,13 @@ const entities: EntityMap = {
               'end_date_relative',
               'ticket_group_id',
               'hold_ids',
-            ]
+            ],
           },
         },
         after: [
-          { on: 'outent', field: 'discount_id', set: { inent: 'discount_id' } }
-        ]
-      }
+          { on: 'outent', field: 'discount_id', set: { inent: 'discount_id' } },
+        ],
+      },
     },
   },
   inventory_tier: {
@@ -102,13 +102,13 @@ const entities: EntityMap = {
       load: {
         request: {
           method: 'get',
-          path: "/events/:event_id/inventory_tiers/:inventory_tier/",
-        }
+          path: '/events/:event_id/inventory_tiers/:inventory_tier/',
+        },
       },
       save: {
         request: {
           method: 'post',
-          path: "/events/:event_id/inventory_tiers/:inventory_tier/",
+          path: '/events/:event_id/inventory_tiers/:inventory_tier/',
           body: {
             inventory_tier: [
               'name',
@@ -118,52 +118,52 @@ const entities: EntityMap = {
               'image_id',
               'capacity_total',
               'holds',
-            ]
-          }
+            ],
+          },
         },
-      }
-    }
+      },
+    },
   },
   event_team: {
     actions: {
       load: {
         request: {
-          method: "get",
-          path: "/events/:event_id/teams/:team_id",
+          method: 'get',
+          path: '/events/:event_id/teams/:team_id',
         },
       },
-    }
+    },
   },
   attendee: {
     actions: {
       load: {
         request: {
-          method: "get",
-          path: "/events/:event_id/attendees/:attendee_id/",
-        }
-      }
-    }
+          method: 'get',
+          path: '/events/:event_id/attendees/:attendee_id/',
+        },
+      },
+    },
   },
   format: {
     actions: {
       load: {
         request: {
           method: 'get',
-          path: '/formats/:format_id/'
+          path: '/formats/:format_id/',
         },
-      }
-    }
+      },
+    },
   },
   display_settings: {
     actions: {
       load: {
         request: {
           method: 'get',
-          path: '/events/:event_id/display_settings/'
+          path: '/events/:event_id/display_settings/',
         },
         after: [
-          { on: 'outent', field: 'event_id', set: { query: 'event_id' } }
-        ]
+          { on: 'outent', field: 'event_id', set: { query: 'event_id' } },
+        ],
       },
       save: {
         request: {
@@ -181,15 +181,15 @@ const entities: EntityMap = {
               'show_organizer_twitter',
               'show_facebook_friends_going',
               'terminology',
-            ]
-          }
+            ],
+          },
         },
         after: [
-          { on: 'outent', field: 'event_id', set: { inent: 'event_id' } }
-        ]
-      }
-    }
-  }, 
+          { on: 'outent', field: 'event_id', set: { inent: 'event_id' } },
+        ],
+      },
+    },
+  },
 }
 
 export { entities }
