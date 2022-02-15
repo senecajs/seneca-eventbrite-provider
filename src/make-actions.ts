@@ -17,7 +17,7 @@ function make_actions(action_data: ActionData) {
       perform_tasks(before, context)
     }
 
-    const built_path = build_path(path, q)
+    const built_path = build_uri(path, q)
 
     const res =  await req_fn(built_path)
 
@@ -38,7 +38,7 @@ function make_actions(action_data: ActionData) {
     const { q, ent } = msg
     let body: Record<string, any> = {}
 
-    const built_path = build_path(path, ent)
+    const built_path = build_uri(path, ent)
     
     if(action_data.details.request.body) {
       body = fill_body(action_data.details.request.body, ent)
@@ -83,6 +83,19 @@ function make_actions(action_data: ActionData) {
     return body
   }
 
+  function build_uri(str: string, args: Record<string, any>) {
+    let query = ''
+    let [ uri_blueprint, query_blueprint ] = str.split('?')
+
+    if(query_blueprint) {
+      query = build_query(query_blueprint, args)
+    }
+
+    const uri = build_path(uri_blueprint, args)
+
+    return query ? uri + '?' + query : uri
+  }
+
   function build_path(path: string, args: Record<string, any>) {
     const placeholders = path
       .split("/")
@@ -94,6 +107,18 @@ function make_actions(action_data: ActionData) {
     })
   
     return path
+  }
+
+  function build_query(str: string, args: Record<string, any>) {
+    const params = str.split('&')
+
+    return params.map(p => {
+      const param_name = p.split(":")[1]
+      
+      if(args[param_name]) {
+        return p.replace(':' + param_name, args[param_name])        
+      }
+    }).filter(x => x !== undefined).join('&')
   }
 
   return {
