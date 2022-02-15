@@ -111,7 +111,7 @@ describe('eventbrite-provider', () => {
           .use("entity")
           .use("provider", providerOptions)
           .use(EventbriteProvider)
-  
+
         const load_test_data = test_data.load
         let res_data = await seneca.entity("provider/eventbrite/" + ent_name).load$(load_test_data.args)
   
