@@ -71,8 +71,17 @@ function make_actions(action_data: ActionData) {
     return outent
   }
 
-  function fill_body(body_specs: Record<string, Array<string>>, entity: Record<string, any>) {
+  function fill_body(body_specs: Array<string> | Record<string, Array<string>>, entity: Record<string, any>) {
     let body: Record<string, any> = {}
+
+    if(Array.isArray(body_specs)) {
+      body_specs.forEach(attr => {
+        body[attr] = entity[attr] 
+      })
+
+      return body
+    }
+
     for(const [key, body_args] of Object.entries(body_specs)) {
       body[key] = {}
       body_args.forEach(attr => {
