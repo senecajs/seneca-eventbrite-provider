@@ -398,6 +398,32 @@ const entities: EntityMap = {
       },
     },
   },
+  media: {
+    actions: {
+      load: {
+        request: {
+          method: 'get',
+          path: '/media/:media_id/?width=:width&height=:height',
+        },
+        after: [
+          { on: 'outent', field: 'media_id', set: { query: 'media_id' } }
+        ]
+      },
+      save: {
+        request: {
+          method: 'post',
+          path: '/media/:media_id/?width=:width&height=:height',
+          body: [
+            'upload_token',
+            'crop_mask'
+          ]
+        },
+        after: [
+          { on: 'outent', field: 'media_id', set: { inent: 'media_id' } }
+        ]
+      },
+    },
+  },
 }
 
 export { entities }

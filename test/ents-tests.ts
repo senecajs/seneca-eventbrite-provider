@@ -413,6 +413,27 @@ const ents_tests: TestEntityMap = {
       },
     }
   },
+  media: {
+    load: {
+      args: {
+       media_id: '207605529',
+       width: '10',
+       height: '15'
+      },
+    },
+    save: {
+      changes: {
+        crop_mask: {
+          top_left: {
+            y: 15,
+            x: 15,
+          },
+          width: 123,
+          height: 321
+        }
+      },
+    }
+  },
 }
 
 export { ents_tests }

@@ -237,6 +237,38 @@ const mocks = {
       }
     },
   },
+  media: {
+    get: {
+      url: "/media/:media_id/",
+      mock_data: {
+        id: '207605529',
+        crop_mask: {
+          top_left: {
+            top_left: {
+              y: 15,
+              x: 15,
+            },
+            width: 123,
+            height: 321
+          }
+        }
+      }
+    },
+    post: {
+      url: "/media/:media_id/",
+      mock_data: {
+        id: '207605529',
+        crop_mask: {
+          top_left: {
+            y: 15,
+            x: 15,
+          },
+          width: 123,
+          height: 321
+        }
+      }
+    }
+  },
 }
 
 export { mocks }
