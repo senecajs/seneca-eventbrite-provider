@@ -133,7 +133,7 @@ const mocks = {
   },
   sales_report: {
     get: {
-      url: "/reports/sales?event_ids=:event_ids&event_status=:event_status&start_date=:start_date&end_date=:end_date&filter_by=:filter_by&group_by=:group_by&period=:period&date_facet=:date_facet&timezone=:timezoney",
+      url: "/reports/sales",
       mock_data: {
         id: '1234',
       }
@@ -141,7 +141,7 @@ const mocks = {
   },
   attendee_report: {
     get: {
-      url: "/reports/attendees?event_ids=:event_ids&event_status=:event_status&start_date=:start_date&end_date=:end_date&filter_by=:filter_by&group_by=:group_by&period=:period&date_facet=:date_facet&timezone=:timezoney",
+      url: "/reports/attendees",
       mock_data: {
         id: '1234',
       }
@@ -149,7 +149,7 @@ const mocks = {
   },
   published_structured_content: {
     get: {
-      url: "/events/:id/structured_content?propose=:propose",
+      url: "/events/:id/structured_content",
       mock_data: {
         access_type: 'public',
       }
@@ -157,7 +157,7 @@ const mocks = {
   },
   working_structured_content: {
     get: {
-      url: "/events/:id/structured_content/edit?propose=:propose",
+      url: "/events/:id/structured_content/edit",
       mock_data: {
         access_type: 'public',
       }
@@ -165,7 +165,7 @@ const mocks = {
   },
   text_overrides: {
     get: {
-      url: "/organizations/:organization_id/text_overrides/?locale=:locale&venue_id=:venue_id&event_id=:event_id&text_codes=:text_codes",
+      url: "/organizations/:organization_id/text_overrides",
       mock_data: {
         text_code: 'tickets_not_yet_on_sale',
       }
