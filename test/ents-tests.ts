@@ -288,7 +288,8 @@ const ents_tests: TestEntityMap = {
   published_structured_content: {
     load: {
       args: {
-        id: 1
+        id: 1,
+        propose: 'foo'
       },
       expectations: {
         access_type: {
@@ -300,7 +301,8 @@ const ents_tests: TestEntityMap = {
   working_structured_content: {
     load: {
       args: {
-        id: 1
+        id: 1,
+        propose: 'foo'
       },
       expectations: {
         access_type: {
