@@ -1,28 +1,25 @@
-import { Context, Task, TasksTypesFn } from "./types"
+import { Context, DelTask, SetTask, Task, TasksTypesFn } from "./types"
+import * as _ from 'lodash'
 
 function perform_tasks(tasks: Task[], context: Context ) {
   tasks.forEach(task => {
-    const [_, __, ...types] = Object.keys(task)
+    const tasks = _.omit(task ,['on', 'field'])
 
-    types.forEach(type => {
-      const typeFn = tasksTypes[type as keyof TasksTypesFn]
-
-      if(!typeFn) {
+    for(const [type, data] of Object.entries(tasks)) {
+      const taskFn = tasksTypes[type as keyof TasksTypesFn]
+  
+      if(!taskFn) {
         throw new Error('unable to find task of type ' + type)
       }
-
-      typeFn(task, context)
-    })
+  
+      taskFn(task as DelTask & SetTask, context)
+    }
   })
 
   return context
 }
 
-function set(task: Task, context: Context) {
-  if(!task.set) {
-    return
-  }
-
+function set(task: SetTask, context: Context) {
   const source_name = Object.keys(task.set)[0]
 
   if(!source_name) {
@@ -38,8 +35,16 @@ function set(task: Task, context: Context) {
   target[target_field] = source[source_field]
 }
 
+function del(task: DelTask, context: Context) {
+  let target  = context[task.on]
+  const field = task.del
+
+  context[task.on] = _.omit(target, [field])
+}
+
 const tasksTypes: TasksTypesFn = {
-  set
+  set,
+  del
 }
 
 export { perform_tasks };
