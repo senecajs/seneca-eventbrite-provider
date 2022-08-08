@@ -7,7 +7,7 @@ type Actions = "load" | "save"
 type ReqDetails = {
   method: string
   path: string
-  body?: Record<string, Array<string>>
+  body?: Array<string> | Record<string, Array<string>>
 }
 
 type TasksTypes = SetTask | DelTask
