@@ -1,9 +1,12 @@
-declare const docs: {
-    loadEvent: {
-        desc: string;
+declare const _default: {
+    messages: {
+        load_event: {
+            desc: string;
+        };
+        save_event: {
+            desc: string;
+        };
     };
-    saveEvent: {
-        desc: string;
-    };
+    sections: {};
 };
-export default docs;
+export default _default;

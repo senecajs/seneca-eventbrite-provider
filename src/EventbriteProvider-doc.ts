@@ -1,20 +1,28 @@
 /* Copyright © 2021 Seneca Project Contributors, MIT License. */
 
 
-const docs = {
+const messages = {
 
-  loadEvent: {
+  load_event: {
     desc: 'Load an Eventbrite event data into an entity.',
   },
 
-  saveEvent: {
+  save_event: {
     desc: 'Update an Eventbrite event data from an entity.',
   },
 
 }
 
-export default docs
+const sections = {}
+
+export default {
+  messages,
+  sections
+}
 
 if ('undefined' !== typeof (module)) {
-  module.exports = docs
+  module.exports = {
+    messages,
+    sections
+  }
 }
