@@ -1,31 +1,50 @@
-![Seneca Eventbrite-Provider](http://senecajs.org/files/assets/seneca-logo.png)
+![Seneca](http://senecajs.org/files/assets/seneca-logo.png)
+> A [Seneca.js](http://senecajs.org) plugin
 
-> _Seneca Eventbrite-Provider_ is a plugin for [Seneca](http://senecajs.org)
-
-Handle incoming messages within other frameworks.
+# @seneca/eventbrite-provider
 
 [![npm version](https://img.shields.io/npm/v/@seneca/eventbrite-provider.svg)](https://npmjs.com/package/@seneca/eventbrite-provider)
 [![build](https://github.com/senecajs/seneca-eventbrite-provider/actions/workflows/build.yml/badge.svg)](https://github.com/senecajs/seneca-eventbrite-provider/actions/workflows/build.yml)
-[![Coverage Status](https://coveralls.io/repos/github/senecajs/seneca-eventbrite-provider/badge.svg?branch=main)](https://coveralls.io/github/senecajs/seneca-eventbrite-provider?branch=main)
 [![Known Vulnerabilities](https://snyk.io/test/github/senecajs/seneca-eventbrite-provider/badge.svg)](https://snyk.io/test/github/senecajs/seneca-eventbrite-provider)
+[![Coverage Status](https://coveralls.io/repos/github/senecajs/seneca-eventbrite-provider/badge.svg?branch=main)](https://coveralls.io/github/senecajs/seneca-eventbrite-provider?branch=main)
 [![DeepScan grade](https://deepscan.io/api/teams/5016/projects/19458/branches/505693/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=5016&pid=19458&bid=505693)
 [![Maintainability](https://api.codeclimate.com/v1/badges/562abed571a4f6412c3a/maintainability)](https://codeclimate.com/github/senecajs/seneca-eventbrite-provider/maintainability)
 
 | ![Voxgig](https://www.voxgig.com/res/img/vgt01r.png) | This open source module is sponsored and supported by [Voxgig](https://www.voxgig.com). |
 |---|---|
 
-## Getting an Eventbrite API Key
+## Install
 
-Before you can start interacting with Eventbrite, you'll need to :
-* [Create an account](https://www.eventbrite.com/signin/).
-* Go to the [Developer Portal](https://www.eventbrite.com/platform/) and click "Get a Free API Key" to retrieve your API key.
+```sh
+npm install @seneca/eventbrite-provider
+```
 
-Read more on [getting a token](https://www.eventbrite.com/platform/api#/introduction/authentication).
+## Quick Example
 
-<!--START:options-->
+```js
+require('seneca')()
+  .use('@seneca/eventbrite-provider')
+```
 
+## More Examples
 
-## Options
+See [test/](test/) for more usage examples.
+
+## Motivation
+
+A [Seneca.js](http://senecajs.org) plugin.
+
+## Support
+
+If you're using this module and need help, you can:
+
+- Post a [github issue](https://github.com/senecajs/seneca-eventbrite-provider/issues)
+- Tweet to [@senecajs](http://twitter.com/senecajs)
+- Ask on the [Gitter](https://gitter.im/senecajs/seneca)
+
+## API
+
+### Options
 
 *None.*
 
@@ -34,8 +53,7 @@ Read more on [getting a token](https://www.eventbrite.com/platform/api#/introduc
 
 <!--START:action-list-->
 
-
-## Action Patterns
+### Action Patterns
 
 * ["role":"entity","base":"eventbrite","cmd":"load","name":"attendee","zone":"provider"](#-roleentitybaseeventbritecmdloadnameattendeezoneprovider-)
 * ["role":"entity","base":"eventbrite","cmd":"load","name":"attendee_report","zone":"provider"](#-roleentitybaseeventbritecmdloadnameattendee_reportzoneprovider-)
@@ -87,8 +105,7 @@ Read more on [getting a token](https://www.eventbrite.com/platform/api#/introduc
 
 <!--START:action-desc-->
 
-
-## Action Descriptions
+### Action Descriptions
 
 ### &laquo; `"role":"entity","base":"eventbrite","cmd":"load","name":"attendee","zone":"provider"` &raquo;
 
@@ -401,3 +418,17 @@ No description provided.
 
 
 <!--END:action-desc-->
+
+## Contributing
+
+The [Senecajs org](https://github.com/senecajs/) encourages open participation. If you feel you can help in any way, be it with documentation, examples, extra testing, or new features please get in touch.
+
+### Running tests
+
+```sh
+npm run test
+```
+
+## Background
+
+Part of the [Senecajs org](https://github.com/senecajs/).
