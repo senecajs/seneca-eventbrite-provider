@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.make_actions = void 0;
+exports.make_actions = make_actions;
 const utils_1 = require("./utils");
 function make_actions(action_data) {
     const { req_fn, details } = action_data;
@@ -104,5 +104,4 @@ function make_actions(action_data) {
         save
     };
 }
-exports.make_actions = make_actions;
 //# sourceMappingURL=make-actions.js.map

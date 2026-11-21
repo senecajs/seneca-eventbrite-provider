@@ -15,15 +15,35 @@
 
 ## Install
 
+Requires Seneca 4 and Node.js 24 or later.
+
 ```sh
-npm install @seneca/eventbrite-provider
+npm install seneca@^4 @seneca/entity @seneca/provider @seneca/eventbrite-provider
 ```
 
 ## Quick Example
 
 ```js
-require('seneca')()
+const seneca = require('seneca')()
+  .use('@seneca/entity')
+  .use('@seneca/provider', {
+    provider: {
+      eventbrite: {
+        keys: {
+          // Get the Eventbrite private token separately, from a vault or
+          // an environment variable.
+          api: { value: process.env.EVENTBRITE_TOKEN },
+        },
+      },
+    },
+  })
   .use('@seneca/eventbrite-provider')
+
+await seneca.ready()
+
+const event = await seneca
+  .entity('provider/eventbrite/event')
+  .load$({ event_id: '<eventbrite-event-id>' })
 ```
 
 ## More Examples

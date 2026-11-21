@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.make_request = void 0;
+exports.make_request = make_request;
 async function make_request(reqFn, path, method, op) {
     try {
         if (op) {
@@ -19,5 +19,4 @@ async function make_request(reqFn, path, method, op) {
         throw new Error('Eventbrite Error: ' + JSON.stringify(error.parsedError));
     }
 }
-exports.make_request = make_request;
 //# sourceMappingURL=make-request.js.map

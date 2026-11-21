@@ -81,7 +81,7 @@ function EventbriteProvider(this: any, options: any) {
       eventbrite = Eventbrite({ token: API_KEY })
     }
     else {
-      this.fail('api-key-missing')
+      throw this.fail('api-key-missing')
     }
   })
 }
