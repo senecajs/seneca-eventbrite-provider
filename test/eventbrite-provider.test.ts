@@ -122,13 +122,9 @@ describe('eventbrite-provider', () => {
           entity[change] = changes[change]
         })
 
-        // The plugin makes its result entities with make$, so their save$
-        // works in callback mode: without a callback it returns the entity
-        // at once and saves in the background. Wait for the saved entity
-        // through the callback.
-        entity = await new Promise((resolve, reject) =>
-          entity.save$(save_test_data.args, (err: any, out: any) =>
-            err ? reject(err) : resolve(out)))
+        // The loaded entity is in promise mode, so save$ resolves with the
+        // saved entity once the POST is done.
+        entity = await entity.save$(save_test_data.args)
   
         // Assertions
         const expectations = save_test_data.expectations
@@ -143,6 +139,46 @@ describe('eventbrite-provider', () => {
 
         await seneca.close()
       })
+    })
+
+    test('save-callback', async () => {
+      const seneca = await makeSeneca()
+
+      const entity = await seneca.entity('provider/eventbrite/venue')
+        .load$(loads['venue'].load.args)
+      entity.name = 'callback'
+
+      // A callback to save$ still gets the saved entity.
+      const saved: any = await new Promise((resolve, reject) =>
+        entity.save$((err: any, out: any) => err ? reject(err) : resolve(out)))
+
+      expect(saved.entity$).toBe('provider/eventbrite/venue')
+      expect(saved.id).toBeDefined()
+      expect(mockApi.calls.map((c) => c.method)).toEqual(['GET', 'POST'])
+
+      await seneca.close()
+    })
+
+    test('save-error', async () => {
+      const seneca = await makeSeneca()
+
+      const entity = await seneca.entity('provider/eventbrite/event')
+        .load$(loads['event'].load.args)
+
+      // The mock API has no route for this path, so the POST fails.
+      entity.event_id = 'no/such-event'
+
+      // The plugin logs the API error; keep the test output clean.
+      const log = jest.spyOn(console, 'log').mockImplementation(() => {})
+      try {
+        await expect(entity.save$()).rejects.toThrow('NOT_FOUND')
+      } finally {
+        log.mockRestore()
+      }
+
+      expect(mockApi.calls.map((c) => c.method)).toEqual(['GET', 'POST'])
+
+      await seneca.close()
     })
   })
 

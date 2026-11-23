@@ -21,7 +21,8 @@ function make_actions(action_data: ActionData) {
 
     const res =  await req_fn(built_path)
 
-    const outent = this.make$(msg.ent.entity$).data$(res)
+    // Promise mode, so that await outent.save$() waits for the save.
+    const outent = this.entity(msg.ent.entity$).data$(res)
 
     if(after) {
       perform_tasks(after, {
@@ -58,7 +59,7 @@ function make_actions(action_data: ActionData) {
       body: JSON.stringify(context.req)
     })
 
-    const outent = this.make$(msg.ent.entity$).data$(res)
+    const outent = this.entity(msg.ent.entity$).data$(res)
 
     if(after) {
       perform_tasks(after, {

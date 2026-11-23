@@ -27,10 +27,10 @@ history.
   (node:http on an ephemeral port) replaces the `msw` handlers, which let
   save requests reach the live API. Live calls were not tested on
   Seneca 4.
-* Known issue: the plugin makes its result entities with `make$`, in
-  callback mode, so `await ent.save$()` on a loaded entity returns the
-  local entity before the save completes. Pass a callback to `save$`, as
-  the tests do, to get the saved entity.
+* Load and save make their result entities with `seneca.entity`, in
+  promise mode, so `await ent.save$()` on a loaded entity resolves with the
+  saved entity, and rejects if the save fails, as it did with
+  `seneca-promisify`. A callback to `save$` still works.
 * devDependencies: `seneca` `^4.0.0`, `@seneca/entity` `^29.0.0`,
   `@seneca/provider` `^5.0.0` (was `^0.2.0`), `seneca-msg-test` `^5.0.0`,
   `@seneca/doc` `^9.0.0`, `typescript` `^5.9.3` and `@types/node` `^24`.
