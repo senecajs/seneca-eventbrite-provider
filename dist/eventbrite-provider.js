@@ -64,7 +64,7 @@ function EventbriteProvider(options) {
             eventbrite = (0, eventbrite_1.default)({ token: API_KEY });
         }
         else {
-            this.fail('api-key-missing');
+            throw this.fail('api-key-missing');
         }
     });
 }

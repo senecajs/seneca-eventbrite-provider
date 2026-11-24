@@ -3,33 +3,27 @@
 
 // https://www.eventbrite.com/manage/events/230866526997/details
 
-import * as Fs from 'fs'
 import crypto from 'crypto'
 
-import EventbriteProvider from '../src/eventbrite-provider'
 import { perform_tasks } from '../src/utils'
 import { Context, DelTask, SetTask, Task } from '../src/types'
 import { ents_tests } from './ents-tests'
-import { set_mock_worker } from './set-mock-worker'
-import { mocks } from './mocks'
+
+// Import the mock of the Eventbrite API, which also points the eventbrite
+// SDK at it, before the plugin.
+import { mockApi, mockClients, MOCK_TOKEN } from './mock-server'
 
 const Seneca = require('seneca')
 const SenecaMsgTest = require('seneca-msg-test')
 const EventbriteProviderMessages = require('./eventbrite-provider.messages').default
 
-const CONFIG: any = {}
-
-if (Fs.existsSync(__dirname + '/local-config.js')) {
-  Object.assign(CONFIG, require(__dirname + '/local-config.js'))
-}
+// The plugin module sets module.exports to the plugin function.
+const EventbriteProvider = require('../src/eventbrite-provider')
 
 jest.setTimeout(10000)
 
-// Configure mock service worker
-const worker = set_mock_worker(mocks)
-
-beforeAll(() => worker.listen())
-afterAll(() => worker.close())
+beforeAll(() => mockApi.listen())
+afterAll(() => mockApi.close())
 
 // Separate entities details by their command type
 const loads = {}
@@ -55,7 +49,7 @@ describe('eventbrite-provider', () => {
       eventbrite: {
         keys: {
           api: {
-            value: CONFIG.key
+            value: MOCK_TOKEN
           }
         }
       }
@@ -65,39 +59,19 @@ describe('eventbrite-provider', () => {
   test('happy', async () => {
     const seneca = Seneca({ legacy: false })
       .test()
-      .use('promisify')
-      .use('provider', {
-        provider: {
-          eventbrite: {
-            keys: {
-              api: {
-                value: CONFIG.key
-              }
-            }
-          }
-        }
-      })
+      .use('@seneca/provider', providerOptions)
       .use(EventbriteProvider)
     await seneca.ready()
+    await seneca.close()
   })
 
   test('messages', async () => {
     const seneca = Seneca({ legacy: false })
       .test()
-      .use('promisify')
-      .use('provider', {
-        provider: {
-          eventbrite: {
-            keys: {
-              api: {
-                value: CONFIG.key
-              }
-            }
-          }
-        }
-      })
+      .use('@seneca/provider', providerOptions)
       .use(EventbriteProvider)
     await (SenecaMsgTest(seneca, EventbriteProviderMessages)())
+    await seneca.close()
   })
 
   describe("entities-load", () => {
@@ -105,12 +79,7 @@ describe('eventbrite-provider', () => {
       let test_data = loads[ent_name]
   
       test(`load-${ent_name}` , async () => {
-        const seneca = Seneca({ legacy: false })
-          .test()
-          .use("promisify")
-          .use("entity")
-          .use("provider", providerOptions)
-          .use(EventbriteProvider)
+        const seneca = await makeSeneca()
 
         const load_test_data = test_data.load
         let res_data = await seneca.entity("provider/eventbrite/" + ent_name).load$(load_test_data.args)
@@ -124,6 +93,11 @@ describe('eventbrite-provider', () => {
         } else {
           expect(res_data.id).toBeDefined()
         }
+
+        expect(mockApi.calls.map((c) => c.method))
+          .toEqual(['GET'])
+
+        await seneca.close()
       })
     })
   })
@@ -133,12 +107,7 @@ describe('eventbrite-provider', () => {
       let test_data = saves[ent_name]
   
       test(`save-${ent_name}` , async () => {
-        const seneca = Seneca({ legacy: false })
-          .test()
-          .use("promisify")
-          .use("entity")
-          .use("provider", providerOptions)
-          .use(EventbriteProvider)
+        const seneca = await makeSeneca()
   
         const load_test_data = loads[ent_name].load
         const save_test_data = test_data.save
@@ -152,6 +121,9 @@ describe('eventbrite-provider', () => {
         Object.keys(changes).forEach(change => {
           entity[change] = changes[change]
         })
+
+        // The loaded entity is in promise mode, so save$ resolves with the
+        // saved entity once the POST is done.
         entity = await entity.save$(save_test_data.args)
   
         // Assertions
@@ -159,7 +131,54 @@ describe('eventbrite-provider', () => {
         expectations
           ? assert(expectations, entity)
           : expect(entity.id).toBeDefined() // check for a ID when no expectations were set
+
+        // The save reached the mock as a POST with a JSON body.
+        expect(mockApi.calls.map((c) => c.method))
+          .toEqual(['GET', 'POST'])
+        expect(mockApi.calls[1].body).toBeDefined()
+
+        await seneca.close()
       })
+    })
+
+    test('save-callback', async () => {
+      const seneca = await makeSeneca()
+
+      const entity = await seneca.entity('provider/eventbrite/venue')
+        .load$(loads['venue'].load.args)
+      entity.name = 'callback'
+
+      // A callback to save$ still gets the saved entity.
+      const saved: any = await new Promise((resolve, reject) =>
+        entity.save$((err: any, out: any) => err ? reject(err) : resolve(out)))
+
+      expect(saved.entity$).toBe('provider/eventbrite/venue')
+      expect(saved.id).toBeDefined()
+      expect(mockApi.calls.map((c) => c.method)).toEqual(['GET', 'POST'])
+
+      await seneca.close()
+    })
+
+    test('save-error', async () => {
+      const seneca = await makeSeneca()
+
+      const entity = await seneca.entity('provider/eventbrite/event')
+        .load$(loads['event'].load.args)
+
+      // The mock API has no route for this path, so the POST fails.
+      entity.event_id = 'no/such-event'
+
+      // The plugin logs the API error; keep the test output clean.
+      const log = jest.spyOn(console, 'log').mockImplementation(() => {})
+      try {
+        await expect(entity.save$()).rejects.toThrow('NOT_FOUND')
+      } finally {
+        log.mockRestore()
+      }
+
+      expect(mockApi.calls.map((c) => c.method)).toEqual(['GET', 'POST'])
+
+      await seneca.close()
     })
   })
 
@@ -280,6 +299,26 @@ describe('eventbrite-provider', () => {
       }    
     })
   })
+
+  async function makeSeneca() {
+    const seneca = Seneca({ legacy: false })
+      .test()
+      .use('@seneca/entity')
+      .use('@seneca/provider', providerOptions)
+      .use(EventbriteProvider)
+
+    const clientCount = mockClients.length
+    await seneca.ready()
+
+    // Fail here rather than send a request to Eventbrite if the plugin ever
+    // builds its client some other way.
+    if (clientCount + 1 !== mockClients.length) {
+      throw new Error('eventbrite SDK: cannot point the client at the mock API')
+    }
+
+    mockApi.calls.length = 0
+    return seneca
+  }
 
   function assert(expectations: any, against: any) {
     for(const [field, field_assertions] of Object.entries(expectations)) {
